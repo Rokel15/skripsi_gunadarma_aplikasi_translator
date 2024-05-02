@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skripsi_aplikasi_translator/data/page_routes.dart';
+import 'package:skripsi_aplikasi_translator/screens/lc_translated_look1_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/recognizing_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SkripsiAplikasiTranslator());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SkripsiAplikasiTranslator extends StatelessWidget {
+  const SkripsiAplikasiTranslator({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return
@@ -21,13 +22,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          // colorScheme: ColorScheme.dark(),
           useMaterial3: true,
         ),
-        home: const RecognizingScreen(),
-      // ),
+        initialRoute: initialRoute,
+        routes: pageRoutes,
     );
   }
 }
-
-
-
