@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:skripsi_aplikasi_translator/screens/camera_and_gallery_translated_screen.dart';
 
 class RecognizingScreen extends StatefulWidget {
   const RecognizingScreen({super.key});
@@ -9,6 +13,12 @@ class RecognizingScreen extends StatefulWidget {
 }
 
 class _RecognizingScreenState extends State<RecognizingScreen> {
+  @override
+  void initState() {
+    imagePicker = ImagePicker();
+    super.initState();
+  }
+
   List<String> languages = ["select language", "language 1", "language 2", "language 3"];
   String selectLanguage = "select language";
 
@@ -18,11 +28,22 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
     });
   }
 
+  File? image;
+  late ImagePicker imagePicker;
+
+  imageFromGallery() async{
+    XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    File image = File(pickedFile!.path);
+    setState(() {
+      this.image = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(0),
+        preferredSize: const Size.fromHeight(0),
         child: AppBar(),
       ),
       body: Column(
@@ -36,6 +57,30 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
               borderRadius: BorderRadius.horizontal(left: Radius.circular(40), right: Radius.circular(40)),
             ),
           ),
+
+          SizedBox(height: 20,),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                child: Icon(Icons.image),
+                onTap: () async{
+                  imageFromGallery();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CameraAndGalleryTranslatedScreen(image: image!, simpleText: "simpleText")),
+                  );
+                },
+              ),
+              GestureDetector(
+                child: Icon(Icons.camera_alt),
+                onTap: (){},
+              )
+            ],
+          ),
+
+          SizedBox(height: 20,),
 
           SizedBox(height: 20,),
 
