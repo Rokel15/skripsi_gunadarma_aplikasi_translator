@@ -1,7 +1,21 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecognizedText extends StatelessWidget {
-  const RecognizedText({super.key});
+  Color recognizedTextColor;
+  String headerText;
+  Icon icon;
+  TextEditingController recognizedTextConttroller;
+
+  RecognizedText({
+    super.key,
+    required this.recognizedTextColor,
+    required this.headerText,
+    required this.icon,
+    required this.recognizedTextConttroller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +24,7 @@ class RecognizedText extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: recognizedTextColor,
         borderRadius: BorderRadius.circular(25),
       ),
       child: Column(
@@ -18,17 +32,18 @@ class RecognizedText extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("recognized text"),
-              Icon(Icons.arrow_downward),
+              Text(headerText),
+              icon,
             ],
           ),
 
           TextFormField(
+            controller: recognizedTextConttroller,
             maxLines: 4,
             decoration: InputDecoration(
-                border: InputBorder.none
+              border: InputBorder.none,
             ),
-
+            enabled: false,
           )
         ],
       ),

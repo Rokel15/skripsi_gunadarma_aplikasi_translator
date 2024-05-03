@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Translatedtext extends StatelessWidget {
-  const Translatedtext({super.key});
+class TranslatedText extends StatelessWidget {
+  Color translatedTextColor;
+  String headerText;
+  Icon icon;
+  TextEditingController translatedTextController;
+
+  TranslatedText({
+    super.key,
+    required this.translatedTextColor,
+    required this.headerText,
+    required this.icon,
+    required this.translatedTextController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +21,7 @@ class Translatedtext extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: translatedTextColor,
         borderRadius: BorderRadius.circular(25),
       ),
       child: Column(
@@ -18,12 +29,13 @@ class Translatedtext extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("recognized text"),
-              Icon(Icons.arrow_upward),
+              Text(headerText),
+              icon,
             ],
           ),
 
           TextFormField(
+            controller: translatedTextController,
             maxLines: 4,
             decoration: InputDecoration(
               border: InputBorder.none,
