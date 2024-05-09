@@ -10,8 +10,9 @@ import 'package:skripsi_aplikasi_translator/screens/recognizing_screen.dart';
 
 late List<CameraDescription> cameras;
 
-void main() async{
+void main(context) async{
   WidgetsFlutterBinding.ensureInitialized();
+  // Provider.of<TranslateProvider>(context, listen: false).cameras = await availableCameras();
   cameras = await availableCameras();
   runApp(const SkripsiAplikasiTranslator());
 }
@@ -39,12 +40,12 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
         // initialRoute: "/recognizing screen",
         // initialRoute: "/gs translated screen",
         // routes: pageRoutes,
-        // routes: {
-        //   "/recognizing screen" : (BuildContext context) => RecognizingScreen(),
-        //   "/lc translated look1 screen" : (BuildContext context) => LcTranslatedLook1Screen(),
-        //   "/lc translated look2 screen" : (BuildContext context) => LcTranslatedLook2Screen(),
-        //   "/gs translated screen" : (BuildContext context) => GsTranslatedScreen(),
-        // },
+        routes: {
+          "/recognizing screen" : (BuildContext context) => RecognizingScreen(),
+          "/lc translated look1 screen" : (BuildContext context) => LcTranslatedLook1Screen(),
+          "/lc translated look2 screen" : (BuildContext context) => LcTranslatedLook2Screen(),
+          // "/gs translated screen" : (BuildContext context) => CameraAndGalleryTranslatedScreen(),
+        },
       ),
     );
   }

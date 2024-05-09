@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TranslatedText extends StatelessWidget {
   Color translatedTextColor;
   String headerText;
   Icon icon;
+  Function() onIconTap;
   TextEditingController translatedTextController;
 
   TranslatedText({
@@ -11,6 +13,7 @@ class TranslatedText extends StatelessWidget {
     required this.translatedTextColor,
     required this.headerText,
     required this.icon,
+    required this.onIconTap,
     required this.translatedTextController,
   });
 
@@ -30,7 +33,10 @@ class TranslatedText extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(headerText),
-              icon,
+              GestureDetector(
+                child: icon,
+                onTap: onIconTap,
+              ),
             ],
           ),
 

@@ -2,11 +2,13 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class RecognizedText extends StatelessWidget {
   Color recognizedTextColor;
   String headerText;
   Icon icon;
+  Function() onIconTap;
   TextEditingController recognizedTextConttroller;
 
   RecognizedText({
@@ -14,6 +16,7 @@ class RecognizedText extends StatelessWidget {
     required this.recognizedTextColor,
     required this.headerText,
     required this.icon,
+    required this.onIconTap,
     required this.recognizedTextConttroller,
   });
 
@@ -33,7 +36,10 @@ class RecognizedText extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(headerText),
-              icon,
+              GestureDetector(
+                child: icon,
+                onTap: onIconTap,
+              ),
             ],
           ),
 
