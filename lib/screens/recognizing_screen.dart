@@ -86,6 +86,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                                 child: Icon(Icons.image),
                                 onTap: ()  async{
                                   await translateProvider.imageFromGallery();
+                                  await translateProvider.recognizeText();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -99,6 +100,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                                 child: Icon(Icons.camera_alt),
                                 onTap: () async{
                                   await translateProvider.imageFromCamera();
+                                  await translateProvider.recognizeText();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

@@ -1,12 +1,11 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skripsi_aplikasi_translator/main.dart';
 
 class TranslateProvider extends ChangeNotifier{
-  // late List<CameraDescription> cameras;
-
   //RecognizingScreen
   String _recognizing = "Recognizing...";
   String get recognizing{
@@ -32,20 +31,56 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  File? image;
+  io.File? image;
   ImagePicker imagePicker = ImagePicker();
+
+  String _result = "";
+
+  String get result{
+    return _result;
+  }
+
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  // TextRecognizer? textRecognizer;
 
   imageFromGallery() async{
     XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    File image = File(pickedFile!.path);
+    io.File image = io.File(pickedFile!.path);
     this.image = image;
     notifyListeners();
   }
 
   imageFromCamera() async{
     XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
-    File image = File(pickedFile!.path);
+    io.File image = io.File(pickedFile!.path);
     this.image = image;
+    notifyListeners();
+  }
+
+  recognizeText() async{
+    InputImage inputImage = InputImage.fromFile(this.image!);
+    RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+
+    for (TextBlock block in recognizedText.blocks){
+      final Rect rect = block.boundingBox;
+      final List cornerPoints = block.cornerPoints;
+      final String text = block.text;
+      final List<String> languages = block.recognizedLanguages;
+
+      for (TextLine line in block.lines) {
+        // Same getters as TextBlock
+        for (TextElement element in line.elements) {
+          _result += element.text+" ";
+          // Same getters as TextBlock
+          notifyListeners();
+        }
+        _result += "\n";
+        notifyListeners();
+      }
+      _result += "\n";
+      notifyListeners();
+    }
+    textIsRecognized = result;
     notifyListeners();
   }
 
@@ -104,18 +139,12 @@ class TranslateProvider extends ChangeNotifier{
    return _headerRecognizedText;
   }
 
-  TextEditingController _recognizedTextConttroller = new TextEditingController();
-  TextEditingController get recognizedTextConttroller{
-    return _recognizedTextConttroller;
-  }
+  String textIsRecognized = " ";
 
   String _headerTranslatedText = "Translated Text";
   String get headerTranslatedText{
     return _headerTranslatedText;
   }
 
-  TextEditingController _translatedTextConttroller = TextEditingController();
-  TextEditingController get translatedTextConttroller{
-    return _translatedTextConttroller;
-  }
+  String textIsTranslated = " ";
 }

@@ -33,7 +33,7 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          // colorScheme: ColorScheme.dark(),
+          colorScheme: ColorScheme.dark(),
           useMaterial3: true,
         ),
         home: const RecognizingScreen(),

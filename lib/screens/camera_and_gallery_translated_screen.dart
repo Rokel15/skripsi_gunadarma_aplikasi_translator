@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
-import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/recognized_text.dart';
+import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_recognized.dart';
 import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/translated_text.dart';
 
 class CameraAndGalleryTranslatedScreen extends StatefulWidget {
@@ -49,12 +49,12 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
               translateProvider.translatedIsBelow==true?
               Column(
                 children: [
-                  RecognizedText(
+                  TextIsRecognized(
                     recognizedTextColor: Colors.blue,
                     headerText: translateProvider.headerRecognizedText,
                     icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
                     onIconTap: (){translateProvider.onTextPositionChanged();},
-                    recognizedTextConttroller: translateProvider.recognizedTextConttroller,
+                    textIsRecognized: translateProvider.textIsRecognized
                   ),
 
                   SizedBox(height: 36,),
@@ -64,7 +64,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                     headerText: translateProvider.headerTranslatedText,
                     icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
                     onIconTap: (){translateProvider.onTextPositionChanged();},
-                    translatedTextController: translateProvider.translatedTextConttroller,
+                    translatedText: translateProvider.textIsRecognized,
                   )
                 ],
               ):
@@ -75,17 +75,18 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                     headerText: translateProvider.headerTranslatedText,
                     icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
                     onIconTap: (){translateProvider.onTextPositionChanged();},
-                    translatedTextController: translateProvider.translatedTextConttroller,
+                    translatedText: translateProvider.headerRecognizedText
                   ),
 
                   SizedBox(height: 36,),
 
-                  RecognizedText(
+                  TextIsRecognized(
                     recognizedTextColor: Colors.blue,
                     headerText: translateProvider.headerRecognizedText,
                     icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
                     onIconTap: (){translateProvider.onTextPositionChanged();},
-                    recognizedTextConttroller: translateProvider.recognizedTextConttroller,
+                    textIsRecognized: translateProvider.textIsRecognized,
+
                   ),
                 ],
               ),

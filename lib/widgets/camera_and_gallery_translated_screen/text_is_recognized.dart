@@ -1,23 +1,23 @@
+import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class RecognizedText extends StatelessWidget {
+class TextIsRecognized extends StatelessWidget {
   Color recognizedTextColor;
   String headerText;
   Icon icon;
   Function() onIconTap;
-  TextEditingController recognizedTextConttroller;
+  String? textIsRecognized;
 
-  RecognizedText({
+  TextIsRecognized({
     super.key,
     required this.recognizedTextColor,
     required this.headerText,
     required this.icon,
     required this.onIconTap,
-    required this.recognizedTextConttroller,
+    required this.textIsRecognized,
   });
 
   @override
@@ -44,12 +44,10 @@ class RecognizedText extends StatelessWidget {
           ),
 
           TextFormField(
-            controller: recognizedTextConttroller,
             maxLines: 4,
             decoration: InputDecoration(
               border: InputBorder.none,
             ),
-            enabled: false,
           )
         ],
       ),

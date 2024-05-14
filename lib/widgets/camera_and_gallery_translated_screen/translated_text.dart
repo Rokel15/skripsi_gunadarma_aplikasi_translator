@@ -6,7 +6,7 @@ class TranslatedText extends StatelessWidget {
   String headerText;
   Icon icon;
   Function() onIconTap;
-  TextEditingController translatedTextController;
+  String translatedText;
 
   TranslatedText({
     super.key,
@@ -14,7 +14,7 @@ class TranslatedText extends StatelessWidget {
     required this.headerText,
     required this.icon,
     required this.onIconTap,
-    required this.translatedTextController,
+    required this.translatedText,
   });
 
   @override
@@ -41,7 +41,6 @@ class TranslatedText extends StatelessWidget {
           ),
 
           TextFormField(
-            controller: translatedTextController,
             maxLines: 4,
             decoration: InputDecoration(
               border: InputBorder.none,
