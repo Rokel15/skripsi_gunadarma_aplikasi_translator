@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TranslatedText extends StatelessWidget {
+class TextIsTranslated extends StatelessWidget {
   Color translatedTextColor;
   String headerText;
   Icon icon;
-  Function() onIconTap;
+  Function() onTapIcon;
   String translatedText;
 
-  TranslatedText({
+  TextIsTranslated({
     super.key,
     required this.translatedTextColor,
     required this.headerText,
     required this.icon,
-    required this.onIconTap,
+    required this.onTapIcon,
     required this.translatedText,
   });
 
@@ -21,6 +21,7 @@ class TranslatedText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: MediaQuery.of(context).size.height/3.4,
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -35,18 +36,11 @@ class TranslatedText extends StatelessWidget {
               Text(headerText),
               GestureDetector(
                 child: icon,
-                onTap: onIconTap,
+                onTap: onTapIcon,
               ),
             ],
           ),
-
-          TextFormField(
-            maxLines: 4,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-            ),
-
-          )
+          
         ],
       ),
     );
