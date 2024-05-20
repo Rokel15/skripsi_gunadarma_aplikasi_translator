@@ -1,10 +1,9 @@
-import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_recognized.dart';
-import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/translated_text.dart';
+import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_translated.dart';
 
 class CameraAndGalleryTranslatedScreen extends StatefulWidget {
 
@@ -21,79 +20,93 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
   Widget build(BuildContext context) {
     return Consumer<TranslateProvider>(
       builder: (context, translateProvider, child){
-        return Scaffold(
-          appBar: AppBar(),
-          body: ListView(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height*1/2,
-                  margin: EdgeInsets.symmetric(horizontal: 46),
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(25),
+        return PopScope(
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(0),
+              child: AppBar(),
+            ),
+            body: ListView(
+              children: [
+                SizedBox(height: 14,),
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height*4.8/10,
+                    margin: EdgeInsets.symmetric(horizontal: 46),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: translateProvider.image!=null?
+                    Image.file(
+                      translateProvider.image!,
+                      fit: BoxFit.fill,
+                    ) :
+                    Icon(Icons.find_in_page),
                   ),
-                  child: translateProvider.image!=null?
-                  Image.file(
-                    translateProvider.image!,
-                    fit: BoxFit.fill,
-                  ) :
-                  Icon(Icons.find_in_page),
                 ),
-              ),
 
-              SizedBox(height: 40,),
+                SizedBox(height: 36,),
 
-              translateProvider.translatedIsBelow==true?
-              Column(
-                children: [
-                  TextIsRecognized(
-                    recognizedTextColor: Colors.blue,
-                    headerText: translateProvider.headerRecognizedText,
-                    icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
-                    onIconTap: (){translateProvider.onTextPositionChanged();},
-                    textIsRecognized: translateProvider.textIsRecognized
-                  ),
+                translateProvider.translatedIsBelow==true?
+                Column(
+                  children: [
+                    TextIsRecognized(
+                      //recognizedTextColor: Color(0xff6F61C0),
+                      recognizedTextColor: Color(0xff4C4C6D),
+                      headerText: translateProvider.headerRecognizedText,
+                      icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
+                      onTapIcon: (){translateProvider.onTextPositionChanged();},
+                      textIsRecognized: translateProvider.textIsRecognized,
+                    ),
 
-                  SizedBox(height: 36,),
+                    SizedBox(height: 30,),
 
-                  TranslatedText(
-                    translatedTextColor: Colors.blue,
-                    headerText: translateProvider.headerTranslatedText,
-                    icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
-                    onIconTap: (){translateProvider.onTextPositionChanged();},
-                    translatedText: translateProvider.textIsRecognized,
-                  )
-                ],
-              ):
-              Column(
-                children: [
-                  TranslatedText(
-                    translatedTextColor: Colors.blue,
-                    headerText: translateProvider.headerTranslatedText,
-                    icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
-                    onIconTap: (){translateProvider.onTextPositionChanged();},
-                    translatedText: translateProvider.headerRecognizedText
-                  ),
+                    TextIsTranslated(
+                      // recognizedTextColor: Color(0xff6F61C0),
+                      translatedTextColor: Color(0xff4C4C6D),
+                      headerText: translateProvider.headerTranslatedText,
+                      icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
+                      onTapIcon: (){translateProvider.onTextPositionChanged();},
+                      translatedText: translateProvider.textIsTranslated,
+                    )
+                  ],
+                ) :
+                Column(
+                  children: [
+                    TextIsTranslated(
+                      // recognizedTextColor: Color(0xff6F61C0),
+                      translatedTextColor: Color(0xff4C4C6D),
+                      headerText: translateProvider.headerTranslatedText,
+                      icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
+                      onTapIcon: (){translateProvider.onTextPositionChanged();},
+                      translatedText: translateProvider.textIsTranslated,
+                    ),
 
-                  SizedBox(height: 36,),
+                    SizedBox(height: 30,),
 
-                  TextIsRecognized(
-                    recognizedTextColor: Colors.blue,
-                    headerText: translateProvider.headerRecognizedText,
-                    icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
-                    onIconTap: (){translateProvider.onTextPositionChanged();},
-                    textIsRecognized: translateProvider.textIsRecognized,
+                    TextIsRecognized(
+                      //recognizedTextColor: Color(0xff6F61C0),
+                      recognizedTextColor: Color(0xff4C4C6D),
+                      headerText: translateProvider.headerRecognizedText,
+                      icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
+                      onTapIcon: (){translateProvider.onTextPositionChanged();},
+                      textIsRecognized: translateProvider.textIsRecognized,
+                    ),
+                  ],
+                ),
 
-                  ),
-                ],
-              ),
-
-
-            ],
+                SizedBox(height: 30,),
+              ],
+            ),
           ),
+          canPop: false,
+          onPopInvoked: (didPop){
+            translateProvider.backToRecognizingScreen(context);
+          },
         );
       }
     );

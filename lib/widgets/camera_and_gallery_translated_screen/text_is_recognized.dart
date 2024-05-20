@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,15 +6,15 @@ class TextIsRecognized extends StatelessWidget {
   Color recognizedTextColor;
   String headerText;
   Icon icon;
-  Function() onIconTap;
-  String? textIsRecognized;
+  Function() onTapIcon;
+  String textIsRecognized;
 
   TextIsRecognized({
     super.key,
     required this.recognizedTextColor,
     required this.headerText,
     required this.icon,
-    required this.onIconTap,
+    required this.onTapIcon,
     required this.textIsRecognized,
   });
 
@@ -24,11 +22,13 @@ class TextIsRecognized extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: MediaQuery.of(context).size.height/2.5,
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: recognizedTextColor,
         borderRadius: BorderRadius.circular(25),
+        border: Border.all(color: Colors.white, width: 2.5)
       ),
       child: Column(
         children: [
@@ -38,15 +38,29 @@ class TextIsRecognized extends StatelessWidget {
               Text(headerText),
               GestureDetector(
                 child: icon,
-                onTap: onIconTap,
+                onTap: onTapIcon,
               ),
             ],
           ),
 
-          TextFormField(
-            maxLines: 4,
-            decoration: InputDecoration(
-              border: InputBorder.none,
+          SizedBox(height: 6,),
+
+          Container(
+            height: 4,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20)
+            ),
+          ),
+
+          SizedBox(height: 10,),
+
+          Expanded(
+            child: ListView(
+              children: [
+                Text(textIsRecognized),
+              ],
             ),
           )
         ],

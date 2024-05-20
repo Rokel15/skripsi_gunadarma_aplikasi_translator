@@ -21,12 +21,13 @@ class TextIsTranslated extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height/3.4,
+      height: MediaQuery.of(context).size.height/2.5,
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: translatedTextColor,
         borderRadius: BorderRadius.circular(25),
+        border: Border.all(color: Colors.white, width: 2.5),
       ),
       child: Column(
         children: [
@@ -40,7 +41,28 @@ class TextIsTranslated extends StatelessWidget {
               ),
             ],
           ),
-          
+
+          SizedBox(height: 6,),
+
+          Container(
+            height: 4,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+
+          ),
+
+          SizedBox(height: 10,),
+
+          Expanded(
+            child: ListView(
+              children: [
+                Text(translatedText),
+              ],
+            ),
+          )
         ],
       ),
     );
