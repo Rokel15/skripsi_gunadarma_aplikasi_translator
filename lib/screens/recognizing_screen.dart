@@ -35,7 +35,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
         }
       }
     });
-    //download language
+    //download languageeeeee
     Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
   }
 
