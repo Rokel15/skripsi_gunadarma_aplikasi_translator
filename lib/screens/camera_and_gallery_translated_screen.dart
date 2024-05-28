@@ -21,14 +21,18 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
     return Consumer<TranslateProvider>(
       builder: (context, translateProvider, child){
         return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop){
+            translateProvider.backToRecognizingScreen(context);
+          },
           child: Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(0),
+              preferredSize: const Size.fromHeight(0),
               child: AppBar(),
             ),
             body: ListView(
               children: [
-                SizedBox(height: 14,),
+                const SizedBox(height: 14,),
 
                 ClipRRect(
                   borderRadius: BorderRadius.circular(25),
@@ -49,7 +53,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                   ),
                 ),
 
-                SizedBox(height: 36,),
+                const SizedBox(height: 36,),
 
                 translateProvider.translatedIsBelow==true?
                 Column(
@@ -86,7 +90,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                       translatedText: translateProvider.textIsTranslated,
                     ),
 
-                    SizedBox(height: 30,),
+                    const SizedBox(height: 30,),
 
                     TextIsRecognized(
                       //recognizedTextColor: Color(0xff6F61C0),
@@ -99,14 +103,11 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                   ],
                 ),
 
-                SizedBox(height: 30,),
+                const SizedBox(height: 30,),
               ],
             ),
           ),
-          canPop: false,
-          onPopInvoked: (didPop){
-            translateProvider.backToRecognizingScreen(context);
-          },
+
         );
       }
     );

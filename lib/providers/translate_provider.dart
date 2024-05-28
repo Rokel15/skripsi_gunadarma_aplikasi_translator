@@ -5,8 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:skripsi_aplikasi_translator/main.dart';
-import 'package:skripsi_aplikasi_translator/screens/camera_and_gallery_translated_screen.dart';
 
 class TranslateProvider extends ChangeNotifier{
   TextStyle roboto14Italic = GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400,);
@@ -52,14 +50,42 @@ class TranslateProvider extends ChangeNotifier{
 
   //TODO RecognizingScreen
   String _recognizing = "Recognizing...";
+  io.File? image;
+  ImagePicker imagePicker = ImagePicker();
+  String _result = "";
+  String _selecChartLanguage = "select language";
+  List<String> _charLanguages = ["select language", "language 1", "language 2", "language 3"];
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  final modelManager = OnDeviceTranslatorModelManager();
+  bool isIndonesianDownloaded = false;
+  bool isEnglishDownloaded = false;
+  bool isChineseDownloaded = false;
+  bool isJapaneseDownloaded = false;
+  bool isKoreanDownloaded = false;
+  bool isArabicDownloaded = false;
+  bool isTurkishDownloaded = false;
+  bool isGermanDownloaded = false;
+  bool isDutchDownloaded = false;
+  bool isHindiDownloaded = false;
+  bool isRussianDownloaded = false;
+  bool isFrenchDownloaded = false;
+  dynamic onDeviceTranslator;
+
   String get recognizing{
     return _recognizing;
   }
 
-  io.File? image;
-  ImagePicker imagePicker = ImagePicker();
+  String get result{
+    return _result;
+  }
 
-  String _result = "";
+  String get selectCharLanguage{
+    return _selecChartLanguage;
+  }
+
+  List<String> get charLanguages{
+    return [..._charLanguages];
+  }
 
   imageFromGallery() async{
     XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -75,31 +101,11 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  String get result{
-    return _result;
-  }
-
-  List<String> _charLanguages = ["select language", "language 1", "language 2", "language 3"];
-  List<String> get charLanguages{
-    return [..._charLanguages];
-  }
-
-  String _selecChartLanguage = "select language";
-  String get selectCharLanguage{
-    return _selecChartLanguage;
-  }
-
-  final textRecognizerLatin = TextRecognizer(script: TextRecognitionScript.latin);
-  final textRecognizerChinese = TextRecognizer(script: TextRecognitionScript.chinese);
-  final textRecognizerJapanese = TextRecognizer(script: TextRecognitionScript.japanese);
-  final textRecognizerKorean = TextRecognizer(script: TextRecognitionScript.korean);
-  final textRecognitionDevanagiri = TextRecognizer(script: TextRecognitionScript.devanagiri);
-
   recognizeText() async{
     InputImage inputImage = InputImage.fromFile(image!);
-    RecognizedText recognizedTextLatin = await textRecognizerLatin.processImage(inputImage);
+    RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
-    for (TextBlock block in recognizedTextLatin.blocks){
+    for (TextBlock block in recognizedText.blocks){
       final Rect rect = block.boundingBox;
       final List cornerPoints = block.cornerPoints;
       final String text = block.text;
@@ -122,164 +128,81 @@ class TranslateProvider extends ChangeNotifier{
     textIsRecognized = result;
     notifyListeners();
   }
-
-  recognizeTextLatin() async{
-    InputImage inputImage = InputImage.fromFile(image!);
-    RecognizedText recognizedLatinTextLatin = await textRecognizerLatin.processImage(inputImage);
-
-    for (TextBlock block in recognizedLatinTextLatin.blocks){
-      final Rect rect = block.boundingBox;
-      final List cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          _result += element.text+" ";
-          // Same getters as TextBlock
-          notifyListeners();
-        }
-        _result += "\n";
-        notifyListeners();
-      }
-      _result += "\n";
-      notifyListeners();
-    }
-
-    textIsRecognized = result;
-    notifyListeners();
-  }
-
-  recognizeTextChinese() async{
-    InputImage inputImage = InputImage.fromFile(image!);
-    RecognizedText recognizedChineseText = await textRecognizerChinese.processImage(inputImage);
-
-    for (TextBlock block in recognizedChineseText.blocks){
-      final Rect rect = block.boundingBox;
-      final List cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          _result += element.text+" ";
-          // Same getters as TextBlock
-          notifyListeners();
-        }
-        _result += "\n";
-        notifyListeners();
-      }
-      _result += "\n";
-      notifyListeners();
-    }
-
-    textIsRecognized = result;
-    notifyListeners();
-  }
-
-  recognizeTextJapanese() async{
-    InputImage inputImage = InputImage.fromFile(image!);
-    RecognizedText recognizedJapaneseText = await textRecognizerJapanese.processImage(inputImage);
-
-    for (TextBlock block in recognizedJapaneseText.blocks){
-      final Rect rect = block.boundingBox;
-      final List cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          _result += element.text+" ";
-          // Same getters as TextBlock
-          notifyListeners();
-        }
-        _result += "\n";
-        notifyListeners();
-      }
-      _result += "\n";
-      notifyListeners();
-    }
-
-    textIsRecognized = result;
-    notifyListeners();
-  }
-
-  recognizeTextKorean() async{
-    InputImage inputImage = InputImage.fromFile(image!);
-    RecognizedText recognizedKoreanText = await textRecognizerKorean.processImage(inputImage);
-
-    for (TextBlock block in recognizedKoreanText.blocks){
-      final Rect rect = block.boundingBox;
-      final List cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          _result += element.text+" ";
-          // Same getters as TextBlock
-          notifyListeners();
-        }
-        _result += "\n";
-        notifyListeners();
-      }
-      _result += "\n";
-      notifyListeners();
-    }
-
-    textIsRecognized = result;
-    notifyListeners();
-  }
-
-  recognizeTextDevanagiri() async{
-    InputImage inputImage = InputImage.fromFile(image!);
-    RecognizedText recognizedDevanagiriText = await textRecognitionDevanagiri.processImage(inputImage);
-
-    for (TextBlock block in recognizedDevanagiriText.blocks){
-      final Rect rect = block.boundingBox;
-      final List cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          _result += element.text+" ";
-          // Same getters as TextBlock
-          notifyListeners();
-        }
-        _result += "\n";
-        notifyListeners();
-      }
-      _result += "\n";
-      notifyListeners();
-    }
-
-    textIsRecognized = result;
-    notifyListeners();
-  }
-
-  final modelManager = OnDeviceTranslatorModelManager();
-  bool isEnglishDownloaded = false;
-  bool isIndonesianDownloaded = false;
-  dynamic onDeviceTranslator;
 
   Future checkAndDownloadModel() async{
-    isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
     isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
+    isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
+    isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
+    isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
+    isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
+    isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
+    isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
+    isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
+    isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
+    isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
+    isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
+    isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
+
+    if(!isIndonesianDownloaded){
+      isIndonesianDownloaded = await modelManager.downloadModel(TranslateLanguage.indonesian.bcpCode);
+      notifyListeners();
+    }
 
     if(!isEnglishDownloaded){
       isEnglishDownloaded = await modelManager.downloadModel(TranslateLanguage.english.bcpCode);
       notifyListeners();
     }
-    if(!isIndonesianDownloaded){
-      isIndonesianDownloaded = await modelManager.downloadModel(TranslateLanguage.indonesian.bcpCode);
+
+    if(!isChineseDownloaded){
+      isChineseDownloaded = await modelManager.downloadModel(TranslateLanguage.chinese.bcpCode);
       notifyListeners();
     }
+
+    if(!isJapaneseDownloaded){
+      isJapaneseDownloaded = await modelManager.downloadModel(TranslateLanguage.japanese.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isKoreanDownloaded){
+      isKoreanDownloaded = await modelManager.downloadModel(TranslateLanguage.korean.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isArabicDownloaded){
+      isArabicDownloaded = await modelManager.downloadModel(TranslateLanguage.arabic.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isTurkishDownloaded){
+      isTurkishDownloaded = await modelManager.downloadModel(TranslateLanguage.turkish.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isGermanDownloaded){
+      isGermanDownloaded = await modelManager.downloadModel(TranslateLanguage.german.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isDutchDownloaded){
+      isDutchDownloaded = await modelManager.downloadModel(TranslateLanguage.dutch.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isHindiDownloaded){
+      isHindiDownloaded = await modelManager.downloadModel(TranslateLanguage.hindi.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isRussianDownloaded){
+      isRussianDownloaded = await modelManager.downloadModel(TranslateLanguage.russian.bcpCode);
+      notifyListeners();
+    }
+
+    if(!isFrenchDownloaded){
+      isFrenchDownloaded = await modelManager.downloadModel(TranslateLanguage.french.bcpCode);
+      notifyListeners();
+    }
+
 
     if(isEnglishDownloaded && isIndonesianDownloaded){
       onDeviceTranslator = OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian);
@@ -292,6 +215,7 @@ class TranslateProvider extends ChangeNotifier{
     // await checkAndDownloadModel();
     if(isEnglishDownloaded && isIndonesianDownloaded){
       final String response = await onDeviceTranslator.translateText(text);
+      final String response2 = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.chinese, targetLanguage: TranslateLanguage.indonesian).translateText(text);
       textIsTranslated = response;
       notifyListeners();
     }

@@ -15,8 +15,11 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
   late CameraController cameraController;
   
   @override
-  void initState() {
+  void initState(){
     super.initState();
+
+    // Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
+
     cameraController = CameraController(cameras[0], ResolutionPreset.high);
     cameraController.initialize().then((_) {
       if (!mounted) {
@@ -35,8 +38,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
         }
       }
     });
-    //download languageeeeee
-    Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
+
   }
 
   @override
@@ -83,9 +85,6 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                                 child: const Icon(Icons.image),
                                 onTap: () async{
                                   await translateProvider.imageFromGallery();
-                                  // await translateProvider.checkAndDownloadModel();
-                                  // await translateProvider.recognizeText();
-                                  // await translateProvider.translateText(translateProvider.textIsRecognized);
                                   translateProvider.recognizeTextAndTranslate(context);
                                 },
                               ),

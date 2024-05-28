@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
 import 'package:skripsi_aplikasi_translator/screens/camera_and_gallery_translated_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/lc_translated_look1_screen.dart';
@@ -25,11 +24,8 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<TranslateProvider>(
-          create: (context) => TranslateProvider(),
+          create: (context) => TranslateProvider()..checkAndDownloadModel(),
         ),
-        // BlocProvider(
-        //   create: (context),
-        // )
       ],
       child: MaterialApp(
         title: 'skripsi aplikasi translator',
@@ -46,7 +42,6 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
           "/lc translated look2 screen" : (BuildContext context) => const LcTranslatedLook2Screen(),
           "/image translated screen" : (BuildContext context) =>  CameraAndGalleryTranslatedScreen(),
           "/user written translated screen" : (BuildContext context) => const UserWrittenScreen(),
-          // "/" (BuildContext context) =>
         },
       ),
     );
