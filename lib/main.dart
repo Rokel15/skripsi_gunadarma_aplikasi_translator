@@ -34,7 +34,6 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
           colorScheme: const ColorScheme.dark(),
           useMaterial3: true,
         ),
-        // home: UserWrittenScreen(),
         initialRoute: "/recognizing screen",
         routes: {
           "/recognizing screen" : (BuildContext context) => const RecognizingScreen(),
