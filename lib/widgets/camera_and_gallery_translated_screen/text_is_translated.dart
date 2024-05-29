@@ -21,7 +21,7 @@ class TextIsTranslated extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height/2.5,
+      height: MediaQuery.of(context).size.height/2.8,
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(

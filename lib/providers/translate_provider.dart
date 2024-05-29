@@ -47,7 +47,6 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-
   //TODO RecognizingScreen
   String _recognizing = "Recognizing...";
   io.File? image;
@@ -70,6 +69,34 @@ class TranslateProvider extends ChangeNotifier{
   bool isRussianDownloaded = false;
   bool isFrenchDownloaded = false;
   dynamic onDeviceTranslator;
+  final String _headerRecognizedText = "Recognized Text";
+  final String _headerTranslatedText = "Translated Text";
+  String textIsRecognized = "";
+  String textIsTranslated = "";
+
+  List<String> get charLanguages{
+    return [..._charLanguages];
+  }
+
+  Icon get galleryIcon{
+    return const Icon(Icons.image);
+  }
+
+  Icon get cameraIcon{
+    return const Icon(Icons.camera);
+  }
+
+  Icon get inputTextIcon{
+    return const Icon(Icons.edit);
+  }
+
+  String get headerRecognizedText{
+    return _headerRecognizedText;
+  }
+
+  String get headerTranslatedText{
+    return _headerTranslatedText;
+  }
 
   String get recognizing{
     return _recognizing;
@@ -81,10 +108,6 @@ class TranslateProvider extends ChangeNotifier{
 
   String get selectCharLanguage{
     return _selecChartLanguage;
-  }
-
-  List<String> get charLanguages{
-    return [..._charLanguages];
   }
 
   imageFromGallery() async{
@@ -214,8 +237,8 @@ class TranslateProvider extends ChangeNotifier{
   Future translateText(String text)async{
     // await checkAndDownloadModel();
     if(isEnglishDownloaded && isIndonesianDownloaded){
-      final String response = await onDeviceTranslator.translateText(text);
-      final String response2 = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.chinese, targetLanguage: TranslateLanguage.indonesian).translateText(text);
+      // final String response = await onDeviceTranslator.translateText(text);
+      final String response = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian).translateText(text);
       textIsTranslated = response;
       notifyListeners();
     }
@@ -229,6 +252,11 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  goToInputTextAndTranslate(BuildContext context) async{
+    Navigator.pushNamed(context, "/translate input text screen");
+    notifyListeners();
+  }
+
   void goToLcTranslated({required BuildContext context}){
     Navigator.pushNamed(context, "/lc translated look1 screen");
     notifyListeners();
@@ -236,6 +264,15 @@ class TranslateProvider extends ChangeNotifier{
 
   //TODO CameraAndGalleryTranslatedScreen
   bool _translatedIsBelow = true;
+
+  Icon get arrowDownwardIcon{
+    return const Icon(Icons.arrow_downward);
+  }
+
+  Icon get arrowUpwardIcon{
+    return const Icon(Icons.arrow_upward);
+  }
+
   bool get translatedIsBelow{
     return _translatedIsBelow;
   }
@@ -261,33 +298,12 @@ class TranslateProvider extends ChangeNotifier{
 
   Future backToRecognizingScreen(BuildContext context) async{
     await emptyData();
+    // Navigator.pushNamedAndRemoveUntil(context, "/recognizing screen", (route) => false);
+    Navigator.popAndPushNamed(context, "/recognizing screen");
     notifyListeners();
-    Navigator.pushNamedAndRemoveUntil(context, "/recognizing screen", (route) => false);
   }
 
-  Icon get arrowDownwardIcon{
-    return const Icon(Icons.arrow_downward);
-  }
-
-  Icon get arrowUpwardIcon{
-    return const Icon(Icons.arrow_upward);
-  }
-
-  final String _headerRecognizedText = "Recognized Text";
-  String get headerRecognizedText{
-   return _headerRecognizedText;
-  }
-
-  String textIsRecognized = "";
-
-  final String _headerTranslatedText = "Translated Text";
-  String get headerTranslatedText{
-    return _headerTranslatedText;
-  }
-
-  String textIsTranslated = "";
-
-  //TODO UserWrittenTranslatedScreen
+  //TODO TranslateInputTextScreen
   String inputLabel = "input";
   String translateLabel = "translate";
   TextEditingController inputTextController = TextEditingController();

@@ -6,6 +6,7 @@ import 'package:skripsi_aplikasi_translator/screens/camera_and_gallery_translate
 import 'package:skripsi_aplikasi_translator/screens/lc_translated_look1_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/lc_translated_look2_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/recognizing_screen.dart';
+import 'package:skripsi_aplikasi_translator/screens/translate_input_text_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/user_written_translated_screen.dart';
 
 late List<CameraDescription> cameras;
@@ -40,7 +41,7 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
           "/lc translated look1 screen" : (BuildContext context) => const LcTranslatedLook1Screen(),
           "/lc translated look2 screen" : (BuildContext context) => const LcTranslatedLook2Screen(),
           "/image translated screen" : (BuildContext context) =>  CameraAndGalleryTranslatedScreen(),
-          "/user written translated screen" : (BuildContext context) => const UserWrittenScreen(),
+          "/translate input text screen" : (BuildContext context) => const TranslateInputTextScreen(),
         },
       ),
     );

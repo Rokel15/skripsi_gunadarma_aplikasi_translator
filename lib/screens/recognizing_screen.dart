@@ -1,6 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_gallery.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_text_by_user.dart';
 import '../main.dart';
 import '../providers/translate_provider.dart';
 
@@ -20,7 +23,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
 
     // Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
 
-    cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    cameraController = CameraController(cameras[0], ResolutionPreset.max);
     cameraController.initialize().then((_) {
       if (!mounted) {
         return;
@@ -81,23 +84,28 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              GestureDetector(
-                                child: const Icon(Icons.image),
-                                onTap: () async{
+
+                              InputImageFromGallery(
+                                icon: translateProvider.galleryIcon,
+                                onTapIcon: () async{
                                   await translateProvider.imageFromGallery();
                                   translateProvider.recognizeTextAndTranslate(context);
                                 },
                               ),
-                              GestureDetector(
-                                child: Icon(Icons.camera_alt),
-                                onTap: () async{
+
+                              InputImageFromCamera(
+                                icon: translateProvider.cameraIcon,
+                                onTapIcon: () async{
                                   await translateProvider.imageFromCamera();
                                   translateProvider.recognizeTextAndTranslate(context);
                                 },
                               ),
-                              GestureDetector(
-                                child: const Icon(Icons.edit),
-                                onTap: (){},
+
+                              InputTextByUser(
+                                icon: translateProvider.inputTextIcon,
+                                onTapIcon: () async{
+                                  await translateProvider.goToInputTextAndTranslate;
+                                },
                               )
                             ],
                           ),

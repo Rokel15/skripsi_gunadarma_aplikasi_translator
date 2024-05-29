@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
@@ -32,18 +31,12 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
             ),
             body: ListView(
               children: [
-                const SizedBox(height: 14,),
-
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height*4.8/10,
-                    margin: EdgeInsets.symmetric(horizontal: 46),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height*4.8/10,
+                  margin: EdgeInsets.symmetric(horizontal: 46),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
                     child: translateProvider.image!=null?
                     Image.file(
                       translateProvider.image!,
