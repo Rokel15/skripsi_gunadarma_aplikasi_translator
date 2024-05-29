@@ -60,7 +60,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                       textIsRecognized: translateProvider.textIsRecognized,
                     ),
 
-                    SizedBox(height: 30,),
+                    const SizedBox(height: 30,),
 
                     TextIsTranslated(
                       // recognizedTextColor: Color(0xff6F61C0),
