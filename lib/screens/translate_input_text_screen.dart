@@ -14,37 +14,41 @@ class TranslateInputTextScreen extends StatelessWidget {
     return Consumer<TranslateProvider>(
       builder: (context, translateProvider, child) {
         return Scaffold(
-          appBar: AppBar(),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(0),
+            child: AppBar(),
+          ),
           body: ListView(
             children: [
               SelectLook(
                 dropdownButtonValue: translateProvider.selectLook,
                 dropdownButtonItems: translateProvider.looks,
               ),
-              const SizedBox(
-                height: 13,
-              ),
+
+              const SizedBox(height: 13,),
+
               InputText(
                 label: translateProvider.inputLabel,
-                textStyleLabe: translateProvider.roboto14Bold,
+                textStyleLabel: translateProvider.roboto14Bold,
                 inputTextController: translateProvider.inputTextController,
-                color: Color(0xff2E3840),
+                color: translateProvider.inputTextColor,
                 borderColor: Colors.white,
                 selectLanguageValue: translateProvider.selectLanguage,
                 selectLanguageItems: translateProvider.languages,
+                onLanguageChanged: (String val){translateProvider.onLanguageChanged(val);},
               ),
-              const SizedBox(
-                height: 20,
-              ),
+
+              const SizedBox(height: 20,),
+
               TranslateInput(
                 label: translateProvider.translateLabel,
                 textStyleTranslateInput: translateProvider.roboto14Bold,
                 translateInputText: translateProvider.textStyleTranslateInput,
-                color: Color(0xff2E3840),
+                color: translateProvider.inputTextColor,
                 borderColor: Colors.white,
                 selectLanguageValue: translateProvider.selectLanguage,
                 selectLanguageItems: translateProvider.languages,
-              )
+              ),
             ],
           ),
         );

@@ -52,8 +52,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                 Column(
                   children: [
                     TextIsRecognized(
-                      //recognizedTextColor: Color(0xff6F61C0),
-                      recognizedTextColor: Color(0xff4C4C6D),
+                      recognizedTextColor: translateProvider.textFromImagecolor,
                       headerText: translateProvider.headerRecognizedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},
@@ -63,8 +62,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                     const SizedBox(height: 30,),
 
                     TextIsTranslated(
-                      // recognizedTextColor: Color(0xff6F61C0),
-                      translatedTextColor: Color(0xff4C4C6D),
+                      translatedTextColor: translateProvider.textFromImagecolor,
                       headerText: translateProvider.headerTranslatedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},
@@ -75,8 +73,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                 Column(
                   children: [
                     TextIsTranslated(
-                      // recognizedTextColor: Color(0xff6F61C0),
-                      translatedTextColor: Color(0xff4C4C6D),
+                      translatedTextColor: translateProvider.textFromImagecolor,
                       headerText: translateProvider.headerTranslatedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},
@@ -86,8 +83,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                     const SizedBox(height: 30,),
 
                     TextIsRecognized(
-                      //recognizedTextColor: Color(0xff6F61C0),
-                      recognizedTextColor: Color(0xff4C4C6D),
+                      recognizedTextColor: translateProvider.textFromImagecolor,
                       headerText: translateProvider.headerRecognizedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},

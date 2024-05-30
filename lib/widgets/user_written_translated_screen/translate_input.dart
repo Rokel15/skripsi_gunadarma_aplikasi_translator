@@ -65,7 +65,6 @@ class _TranslateInputState extends State<TranslateInput> {
               child: ListView(
                   children: [
                     Text(widget.translateInputText),
-                    Text("data")
                   ]
               )
           ),

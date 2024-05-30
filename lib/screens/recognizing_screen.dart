@@ -104,7 +104,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                               InputTextByUser(
                                 icon: translateProvider.inputTextIcon,
                                 onTapIcon: () async{
-                                  await translateProvider.goToInputTextAndTranslate;
+                                  await translateProvider.goToInputTextAndTranslate(context);
                                 },
                               )
                             ],
@@ -132,7 +132,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       Align(
                         alignment: Alignment.topRight,
                         child: DropdownButton(
-                          value: translateProvider.selectLanguage,
+                          value: translateProvider.selectLanguageForLiveCamera,
                           items: translateProvider.languages.map((String val) {
                             return DropdownMenuItem(
                               value: val,
@@ -142,7 +142,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                             );
                           }).toList(),
                           onChanged: (String? val) {
-                            translateProvider.onLanguageChanged(val);
+                            translateProvider.onLanguageChangedForLiveCamera(val);
                             },
                         ),
                       ),

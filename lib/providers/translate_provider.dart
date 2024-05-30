@@ -17,18 +17,43 @@ class TranslateProvider extends ChangeNotifier{
   TextStyle roboto16SemiBold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600,);
   TextStyle roboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700,);
 
-  List<String> _languages = ["select language", "language 1", "language 2", "language 3"];
+  List<String> _languages = [
+    "select language",
+    "English",
+    "Indonesian",
+    "Chinese",
+    "Japanese",
+    "Korean",
+    "Arabic",
+    "Turkish",
+    "German",
+    "Indian",
+    "Russian",
+    "French",
+  ];
+
   List<String> get languages{
     return [..._languages];
   }
 
   String _selectLanguage = "select language";
+  String _selectLanguageForLiveCamera = "select language";
+
   String get selectLanguage{
     return _selectLanguage;
   }
 
+  String get selectLanguageForLiveCamera{
+    return _selectLanguageForLiveCamera;
+  }
+
   void onLanguageChanged(String? language){
     _selectLanguage = language!;
+    notifyListeners();
+  }
+
+  void onLanguageChangedForLiveCamera(String? language){
+    _selectLanguageForLiveCamera = language!;
     notifyListeners();
   }
 
@@ -53,7 +78,6 @@ class TranslateProvider extends ChangeNotifier{
   ImagePicker imagePicker = ImagePicker();
   String _result = "";
   String _selecChartLanguage = "select language";
-  List<String> _charLanguages = ["select language", "language 1", "language 2", "language 3"];
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   final modelManager = OnDeviceTranslatorModelManager();
   bool isIndonesianDownloaded = false;
@@ -73,10 +97,6 @@ class TranslateProvider extends ChangeNotifier{
   final String _headerTranslatedText = "Translated Text";
   String textIsRecognized = "";
   String textIsTranslated = "";
-
-  List<String> get charLanguages{
-    return [..._charLanguages];
-  }
 
   Icon get galleryIcon{
     return const Icon(Icons.image);
@@ -298,14 +318,18 @@ class TranslateProvider extends ChangeNotifier{
 
   Future backToRecognizingScreen(BuildContext context) async{
     await emptyData();
-    // Navigator.pushNamedAndRemoveUntil(context, "/recognizing screen", (route) => false);
     Navigator.popAndPushNamed(context, "/recognizing screen");
     notifyListeners();
   }
+
+  //TODO CameraAndGalleryTranslatedScreen
+  Color textFromImagecolor = Color(0xff4C4C6D);
 
   //TODO TranslateInputTextScreen
   String inputLabel = "input";
   String translateLabel = "translate";
   TextEditingController inputTextController = TextEditingController();
   String textStyleTranslateInput = "";
+  Color inputTextColor = Color(0xff2E3840);
+
 }

@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 class InputText extends StatefulWidget {
   String label;
   TextEditingController inputTextController;
-  TextStyle textStyleLabe;
+  TextStyle textStyleLabel;
   Color color;
   Color borderColor;
   String selectLanguageValue;
   List<String> selectLanguageItems;
+  Function(String) onLanguageChanged;
 
   InputText({
     required this.label,
     required this.inputTextController,
-    required this.textStyleLabe,
+    required this.textStyleLabel,
     required this.color,
     required this.borderColor,
     required this.selectLanguageValue,
     required this.selectLanguageItems,
+    required this.onLanguageChanged,
     super.key,
   });
 
@@ -51,12 +53,12 @@ class _InputTextState extends State<InputText> {
                     ),
                   );
                 }).toList(),
-                onChanged: (String? language){},
+                onChanged: (String? language){widget.onLanguageChanged(language!);},
               ),
               
               Text(
                 widget.label,
-                style: widget.textStyleLabe,
+                style: widget.textStyleLabel,
               )
             ],
           ),
@@ -65,7 +67,6 @@ class _InputTextState extends State<InputText> {
             child: TextFormField(
               controller: widget.inputTextController,
               maxLines: null,
-
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
