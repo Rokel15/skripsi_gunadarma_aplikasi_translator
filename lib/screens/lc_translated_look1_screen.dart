@@ -21,7 +21,7 @@ class _LcTranslatedLook1ScreenState extends State<LcTranslatedLook1Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(0),
+        preferredSize: const Size.fromHeight(0),
         child: AppBar(),
       ),
       body: ListView(

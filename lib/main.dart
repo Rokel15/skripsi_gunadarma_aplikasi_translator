@@ -7,7 +7,6 @@ import 'package:skripsi_aplikasi_translator/screens/lc_translated_look1_screen.d
 import 'package:skripsi_aplikasi_translator/screens/lc_translated_look2_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/recognizing_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/translate_input_text_screen.dart';
-import 'package:skripsi_aplikasi_translator/screens/user_written_translated_screen.dart';
 
 late List<CameraDescription> cameras;
 

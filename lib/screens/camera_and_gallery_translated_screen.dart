@@ -34,7 +34,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height*4.8/10,
-                  margin: EdgeInsets.symmetric(horizontal: 46),
+                  margin: const EdgeInsets.symmetric(horizontal: 46),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
                     child: translateProvider.image!=null?
@@ -42,7 +42,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                       translateProvider.image!,
                       fit: BoxFit.fill,
                     ) :
-                    Icon(Icons.find_in_page),
+                    const Icon(Icons.find_in_page),
                   ),
                 ),
 

@@ -49,7 +49,7 @@ class _InputTextState extends State<InputText> {
                   return DropdownMenuItem(
                     value: val,
                     child: Row(
-                      children: [Icon(Icons.language), Text(val)],
+                      children: [const Icon(Icons.language), Text(val)],
                     ),
                   );
                 }).toList(),

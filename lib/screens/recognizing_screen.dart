@@ -137,7 +137,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                             return DropdownMenuItem(
                               value: val,
                               child: Row(
-                                children: [Icon(Icons.language), Text(val)],
+                                children: [const Icon(Icons.language), Text(val)],
                               ),
                             );
                           }).toList(),

@@ -20,10 +20,8 @@ class TextIsTranslated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height/2.8,
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      padding: EdgeInsets.all(20),
+      width: double.infinity, height: MediaQuery.of(context).size.height/2.8,
+      margin: const EdgeInsets.symmetric(horizontal: 20), padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: translatedTextColor,
         borderRadius: BorderRadius.circular(25),
@@ -42,7 +40,7 @@ class TextIsTranslated extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 6,),
+          const SizedBox(height: 6,),
 
           Container(
             height: 4,
@@ -54,7 +52,7 @@ class TextIsTranslated extends StatelessWidget {
 
           ),
 
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
 
           Expanded(
             child: ListView(

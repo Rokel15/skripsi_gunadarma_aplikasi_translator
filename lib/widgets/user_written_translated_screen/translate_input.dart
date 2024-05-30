@@ -8,6 +8,7 @@ class TranslateInput extends StatefulWidget {
   Color borderColor;
   String selectLanguageValue;
   List<String> selectLanguageItems;
+  Function(String) onLanguageChanged;
 
   TranslateInput({
     super.key,
@@ -18,6 +19,7 @@ class TranslateInput extends StatefulWidget {
     required this.borderColor,
     required this.selectLanguageValue,
     required this.selectLanguageItems,
+    required this.onLanguageChanged,
   });
 
   @override
@@ -47,11 +49,11 @@ class _TranslateInputState extends State<TranslateInput> {
                   return DropdownMenuItem(
                     value: val,
                     child: Row(
-                      children: [Icon(Icons.language), Text(val)],
+                      children: [const Icon(Icons.language), Text(val)],
                     ),
                   );
                 }).toList(),
-                onChanged: (String? val){},
+                onChanged: (String? val){widget.onLanguageChanged(val!);},
               ),
 
               Text(

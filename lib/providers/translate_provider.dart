@@ -36,19 +36,29 @@ class TranslateProvider extends ChangeNotifier{
     return [..._languages];
   }
 
-  String _selectLanguage = "select language";
+  String _selectSourceLanguage = "select language";
+  String _selectTargetLanguage = "select language";
   String _selectLanguageForLiveCamera = "select language";
 
-  String get selectLanguage{
-    return _selectLanguage;
+  String get selectSourceLanguage{
+    return _selectSourceLanguage;
+  }
+
+  String get selectTargetLanguage{
+    return _selectTargetLanguage;
   }
 
   String get selectLanguageForLiveCamera{
     return _selectLanguageForLiveCamera;
   }
 
-  void onLanguageChanged(String? language){
-    _selectLanguage = language!;
+  void onSourceLanguageChanged(String? language){
+    _selectSourceLanguage = language!;
+    notifyListeners();
+  }
+
+  void onTargetLanguageChanged(String? language){
+    _selectTargetLanguage = language!;
     notifyListeners();
   }
 
@@ -246,18 +256,15 @@ class TranslateProvider extends ChangeNotifier{
       notifyListeners();
     }
 
-
-    if(isEnglishDownloaded && isIndonesianDownloaded){
-      onDeviceTranslator = OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian);
-      notifyListeners();
-    }
+    // if(isEnglishDownloaded && isIndonesianDownloaded){
+    //   onDeviceTranslator = OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian);
+    //   notifyListeners();
+    // }
     notifyListeners();
   }
 
   Future translateText(String text)async{
-    // await checkAndDownloadModel();
     if(isEnglishDownloaded && isIndonesianDownloaded){
-      // final String response = await onDeviceTranslator.translateText(text);
       final String response = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian).translateText(text);
       textIsTranslated = response;
       notifyListeners();
@@ -323,13 +330,12 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   //TODO CameraAndGalleryTranslatedScreen
-  Color textFromImagecolor = Color(0xff4C4C6D);
+  Color textFromImagecolor = const Color(0xff4C4C6D);
 
   //TODO TranslateInputTextScreen
   String inputLabel = "input";
   String translateLabel = "translate";
   TextEditingController inputTextController = TextEditingController();
   String textStyleTranslateInput = "";
-  Color inputTextColor = Color(0xff2E3840);
-
+  Color inputTextColor = const Color(0xff2E3840);
 }
