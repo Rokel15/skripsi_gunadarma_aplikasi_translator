@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TranslateInput extends StatefulWidget {
@@ -10,6 +11,8 @@ class TranslateInput extends StatefulWidget {
   List<String> selectLanguageItems;
   Function(String) onLanguageChanged;
 
+  Function() tapSementara;
+
   TranslateInput({
     super.key,
     required this.label,
@@ -20,6 +23,7 @@ class TranslateInput extends StatefulWidget {
     required this.selectLanguageValue,
     required this.selectLanguageItems,
     required this.onLanguageChanged,
+    required this.tapSementara
   });
 
   @override
@@ -56,9 +60,14 @@ class _TranslateInputState extends State<TranslateInput> {
                 onChanged: (String? val){widget.onLanguageChanged(val!);},
               ),
 
-              Text(
-                widget.label,
-                style: widget.textStyleTranslateInput,
+              GestureDetector(
+                child: Text(
+                  widget.label,
+                  style: widget.textStyleTranslateInput,
+                ),
+                onTap: (){
+                  widget.tapSementara();
+                },
               )
             ],
           ),

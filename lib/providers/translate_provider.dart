@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io' as io;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -17,35 +18,77 @@ class TranslateProvider extends ChangeNotifier{
   TextStyle roboto16SemiBold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600,);
   TextStyle roboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700,);
 
-  List<String> _languages = [
-    "select language",
-    "English",
-    "Indonesian",
-    "Chinese",
-    "Japanese",
-    "Korean",
-    "Arabic",
-    "Turkish",
-    "German",
-    "Indian",
-    "Russian",
-    "French",
-  ];
+  // List<String> _languages = [
+  //   "select language",
+  //   "English",
+  //   "Indonesian",
+  //   "Chinese",
+  //   "Japanese",
+  //   "Korean",
+  //   "Arabic",
+  //   "Turkish",
+  //   "German",
+  //   "Indian",
+  //   "Russian",
+  //   "French",
+  // ];
+
+  // List<Map<String, TranslateLanguage>> _languages = [
+  //   {"select language": TranslateLanguage.english},
+  //   {"English": TranslateLanguage.english},
+  //   {"Indonesian": TranslateLanguage.indonesian},
+  //   {"Chinese": TranslateLanguage.chinese},
+  //   {"Japanese": TranslateLanguage.japanese},
+  //   {"Korean": TranslateLanguage.korean},
+  //   {"Arabic": TranslateLanguage.arabic},
+  //   {"Turkish": TranslateLanguage.turkish},
+  //   {"German": TranslateLanguage.german},
+  //   {"Dutch": TranslateLanguage.dutch},
+  //   {"Hindi": TranslateLanguage.hindi},
+  //   {"Russian": TranslateLanguage.russian},
+  //   {"French": TranslateLanguage.french},
+  // ];
+
+  Map<String, dynamic> _languages = {
+    "select language": nullptr,
+    "English": TranslateLanguage.english,
+    "Indonesian": TranslateLanguage.indonesian,
+    "Chinese": TranslateLanguage.chinese,
+    "Japanese": TranslateLanguage.japanese,
+    "Korean": TranslateLanguage.korean,
+    "Arabic": TranslateLanguage.arabic,
+    "Turkish": TranslateLanguage.turkish,
+    "German": TranslateLanguage.german,
+    "Dutch": TranslateLanguage.dutch,
+    "Hindi": TranslateLanguage.hindi,
+    "Russian": TranslateLanguage.russian,
+    "French": TranslateLanguage.french,
+  };
 
   List<String> get languages{
-    return [..._languages];
+    return [..._languages.keys.toList()];
   }
 
   String _selectSourceLanguage = "select language";
+  TranslateLanguage? _sourceLanguage;
   String _selectTargetLanguage = "select language";
+  TranslateLanguage? _targetLanguage;
   String _selectLanguageForLiveCamera = "select language";
 
   String get selectSourceLanguage{
     return _selectSourceLanguage;
   }
 
+  TranslateLanguage? get sourceLanguage{
+    return _sourceLanguage;
+  }
+
   String get selectTargetLanguage{
     return _selectTargetLanguage;
+  }
+
+  TranslateLanguage? get targetLanguage{
+    return _targetLanguage;
   }
 
   String get selectLanguageForLiveCamera{
@@ -54,11 +97,13 @@ class TranslateProvider extends ChangeNotifier{
 
   void onSourceLanguageChanged(String? language){
     _selectSourceLanguage = language!;
+    _sourceLanguage = _languages[language];
     notifyListeners();
   }
 
   void onTargetLanguageChanged(String? language){
     _selectTargetLanguage = language!;
+    _targetLanguage = _languages[language];
     notifyListeners();
   }
 
@@ -272,6 +317,18 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future translateInputText()async{
+    if(sourceLanguage != null && targetLanguage != null){
+      final String response = await OnDeviceTranslator(
+        sourceLanguage: sourceLanguage!,
+        targetLanguage: targetLanguage!,
+      ).translateText(inputTextController.text);
+      textTranslateInput = response;
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
   recognizeTextAndTranslate(BuildContext context) async {
     await recognizeText();
     await translateText(textIsRecognized);
@@ -336,6 +393,6 @@ class TranslateProvider extends ChangeNotifier{
   String inputLabel = "input";
   String translateLabel = "translate";
   TextEditingController inputTextController = TextEditingController();
-  String textStyleTranslateInput = "";
+  String textTranslateInput = "";
   Color inputTextColor = const Color(0xff2E3840);
 }

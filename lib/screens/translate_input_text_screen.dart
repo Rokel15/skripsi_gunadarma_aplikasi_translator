@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/translate_provider.dart';
 import '../widgets/user_written_translated_screen/input_text.dart';
 import '../widgets/user_written_translated_screen/select_look.dart';
@@ -43,12 +42,13 @@ class TranslateInputTextScreen extends StatelessWidget {
               TranslateInput(
                 label: translateProvider.translateLabel,
                 textStyleTranslateInput: translateProvider.roboto14Bold,
-                translateInputText: translateProvider.textStyleTranslateInput,
+                translateInputText: translateProvider.textTranslateInput,
                 color: translateProvider.inputTextColor,
                 borderColor: Colors.white,
                 selectLanguageValue: translateProvider.selectTargetLanguage,
                 selectLanguageItems: translateProvider.languages,
                 onLanguageChanged: (String val){translateProvider.onTargetLanguageChanged(val);},
+                tapSementara: (){translateProvider.translateInputText();},
               ),
             ],
           ),
