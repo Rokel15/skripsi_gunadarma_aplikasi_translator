@@ -57,12 +57,12 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.horizontal(left: Radius.circular(40), right: Radius.circular(40),),
-                child: Container(
+                child: SizedBox(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 3.4 / 5,
                   child: Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: CameraPreview(
                           cameraController,
@@ -79,18 +79,26 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       
                       Align(
                         alignment: Alignment.topRight,
-                        child: DropdownButton(
-                          value: translateProvider.selectLanguageForLiveCamera,
-                          items: translateProvider.languages.map((String val){
-                            return DropdownMenuItem(
-                              value: val,
-                              child: Row(
-                                children: [
-                                  Text(val)
-                                ],
-                              ),);
-                          }).toList(),
-                          onChanged: null,
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 8, right: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24), color: Colors.black,
+                          ),
+                          child: DropdownButton(
+                            underline: Container(),
+                            value: translateProvider.selectLanguageForLiveCamera,
+                            items: translateProvider.languages.map((String val){
+                              return DropdownMenuItem(
+                                value: val,
+                                child: Row(
+                                  children: [
+                                    Text(val)
+                                  ],
+                                ),);
+                            }).toList(),
+                            onChanged: (String? val) => translateProvider.onLanguageChangedForLiveCamera(val),
+                          ),
                         ),
                       ),
 
@@ -141,9 +149,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: const BoxDecoration(
-                    // color: Color(0xff3C486B),
-                    color: Color(0xff3F497F),
-                    // color: Color(0xff293462),
+                    color: Color(0xff31363F),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                   ),
                   child: ListView(
@@ -173,14 +179,6 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                 ),
               ),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.arrow_forward),
-            shape: const CircleBorder(),
-            onPressed: () {
-              // Navigator.pushNamed(context, "/lc translated look1 screen");
-              Navigator.pushNamed(context, "/lc translated look2 screen");
-            },
           ),
         );
       },

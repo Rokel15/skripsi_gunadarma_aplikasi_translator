@@ -18,21 +18,6 @@ class TranslateProvider extends ChangeNotifier{
   TextStyle roboto16SemiBold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600,);
   TextStyle roboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700,);
 
-  // List<String> _languages = [
-  //   "select language",
-  //   "English",
-  //   "Indonesian",
-  //   "Chinese",
-  //   "Japanese",
-  //   "Korean",
-  //   "Arabic",
-  //   "Turkish",
-  //   "German",
-  //   "Indian",
-  //   "Russian",
-  //   "French",
-  // ];
-
   Map<String, dynamic> _languages = {
     "select language": nullptr,
     "English": TranslateLanguage.english,
