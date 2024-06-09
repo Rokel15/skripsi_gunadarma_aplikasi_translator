@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
@@ -23,7 +24,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
 
     // Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
 
-    cameraController = CameraController(cameras[0], ResolutionPreset.max);
+    cameraController = CameraController(cameras[0], ResolutionPreset.high);
     cameraController.initialize().then((_) {
       if (!mounted) {
         return;
@@ -41,7 +42,6 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
         }
       }
     });
-
   }
 
   @override
@@ -76,6 +76,23 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                           child: Text(translateProvider.recognizing),
                         ),
                       ),
+                      
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: DropdownButton(
+                          value: translateProvider.selectLanguageForLiveCamera,
+                          items: translateProvider.languages.map((String val){
+                            return DropdownMenuItem(
+                              value: val,
+                              child: Row(
+                                children: [
+                                  Text(val)
+                                ],
+                              ),);
+                          }).toList(),
+                          onChanged: null,
+                        ),
+                      ),
 
                       Align(
                         alignment: Alignment.bottomCenter,
@@ -106,7 +123,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                                 onTapIcon: () async{
                                   await translateProvider.goToInputTextAndTranslate(context);
                                 },
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -124,7 +141,9 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: const BoxDecoration(
-                    color: Colors.grey,
+                    // color: Color(0xff3C486B),
+                    color: Color(0xff3F497F),
+                    // color: Color(0xff293462),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                   ),
                   child: ListView(

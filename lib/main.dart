@@ -5,6 +5,7 @@ import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
 import 'package:skripsi_aplikasi_translator/screens/camera_and_gallery_translated_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/lc_translated_look1_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/lc_translated_look2_screen.dart';
+import 'package:skripsi_aplikasi_translator/screens/opening_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/recognizing_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/translate_input_text_screen.dart';
 
@@ -25,6 +26,7 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<TranslateProvider>(
           create: (context) => TranslateProvider()..checkAndDownloadModel(),
+          // create: (context) => TranslateProvider(),
         ),
       ],
       child: MaterialApp(
@@ -36,6 +38,7 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
         ),
         initialRoute: "/recognizing screen",
         routes: {
+          "/opening screen" : (BuildContext context) => const OpeningScreen(),
           "/recognizing screen" : (BuildContext context) => const RecognizingScreen(),
           "/lc translated look1 screen" : (BuildContext context) => const LcTranslatedLook1Screen(),
           "/lc translated look2 screen" : (BuildContext context) => const LcTranslatedLook2Screen(),

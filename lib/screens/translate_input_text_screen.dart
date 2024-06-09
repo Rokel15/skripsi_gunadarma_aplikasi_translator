@@ -12,45 +12,52 @@ class TranslateInputTextScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TranslateProvider>(
       builder: (context, translateProvider, child) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(0),
-            child: AppBar(),
-          ),
-          body: ListView(
-            children: [
-              SelectLook(
-                dropdownButtonValue: translateProvider.selectLook,
-                dropdownButtonItems: translateProvider.looks,
-              ),
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop){translateProvider.backToRecognizingScreen(context);},
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(0),
+              child: AppBar(),
+            ),
+            body: ListView(
+              children: [
+                SelectLook(
+                  dropdownButtonValue: translateProvider.selectLook,
+                  dropdownButtonItems: translateProvider.looks,
+                ),
 
-              const SizedBox(height: 13,),
+                const SizedBox(height: 13,),
 
-              InputText(
-                label: translateProvider.inputLabel,
-                textStyleLabel: translateProvider.roboto14Bold,
-                inputTextController: translateProvider.inputTextController,
-                color: translateProvider.inputTextColor,
-                borderColor: Colors.white,
-                selectLanguageValue: translateProvider.selectSourceLanguage,
-                selectLanguageItems: translateProvider.languages,
-                onLanguageChanged: (String val){translateProvider.onSourceLanguageChanged(val);},
-              ),
+                InputText(
+                  label: translateProvider.inputLabel,
+                  textStyleLabel: translateProvider.roboto14Bold,
+                  inputTextController: translateProvider.inputTextController,
+                  color: translateProvider.inputTextColor,
+                  borderColor: Colors.white,
+                  selectLanguageValue: translateProvider.selectSourceLanguage,
+                  selectLanguageItems: translateProvider.languages,
+                  onLanguageChanged: (String val){translateProvider.onSourceLanguageChanged(val);},
+                ),
 
-              const SizedBox(height: 20,),
+                const SizedBox(height: 20,),
 
-              TranslateInput(
-                label: translateProvider.translateLabel,
-                textStyleTranslateInput: translateProvider.roboto14Bold,
-                translateInputText: translateProvider.textTranslateInput,
-                color: translateProvider.inputTextColor,
-                borderColor: Colors.white,
-                selectLanguageValue: translateProvider.selectTargetLanguage,
-                selectLanguageItems: translateProvider.languages,
-                onLanguageChanged: (String val){translateProvider.onTargetLanguageChanged(val);},
-                tapSementara: (){translateProvider.translateInputText();},
-              ),
-            ],
+                TranslateInput(
+                  label: translateProvider.translateLabel,
+                  textStyleTranslateInput: translateProvider.roboto14Bold,
+                  translateInputText: translateProvider.textTranslateInput,
+                  color: translateProvider.inputTextColor,
+                  borderColor: Colors.white,
+                  selectLanguageValue: translateProvider.selectTargetLanguage,
+                  selectLanguageItems: translateProvider.languages,
+                  onLanguageChanged: (String val){translateProvider.onTargetLanguageChanged(val);},
+                  tapSementara: () async{
+                    await translateProvider.translateInputText();
+                    print(translateProvider.textTranslateInput);
+                    },
+                ),
+              ],
+            ),
           ),
         );
       },

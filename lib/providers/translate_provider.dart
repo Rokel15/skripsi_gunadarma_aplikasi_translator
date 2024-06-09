@@ -33,22 +33,6 @@ class TranslateProvider extends ChangeNotifier{
   //   "French",
   // ];
 
-  // List<Map<String, TranslateLanguage>> _languages = [
-  //   {"select language": TranslateLanguage.english},
-  //   {"English": TranslateLanguage.english},
-  //   {"Indonesian": TranslateLanguage.indonesian},
-  //   {"Chinese": TranslateLanguage.chinese},
-  //   {"Japanese": TranslateLanguage.japanese},
-  //   {"Korean": TranslateLanguage.korean},
-  //   {"Arabic": TranslateLanguage.arabic},
-  //   {"Turkish": TranslateLanguage.turkish},
-  //   {"German": TranslateLanguage.german},
-  //   {"Dutch": TranslateLanguage.dutch},
-  //   {"Hindi": TranslateLanguage.hindi},
-  //   {"Russian": TranslateLanguage.russian},
-  //   {"French": TranslateLanguage.french},
-  // ];
-
   Map<String, dynamic> _languages = {
     "select language": nullptr,
     "English": TranslateLanguage.english,
@@ -75,25 +59,11 @@ class TranslateProvider extends ChangeNotifier{
   TranslateLanguage? _targetLanguage;
   String _selectLanguageForLiveCamera = "select language";
 
-  String get selectSourceLanguage{
-    return _selectSourceLanguage;
-  }
-
-  TranslateLanguage? get sourceLanguage{
-    return _sourceLanguage;
-  }
-
-  String get selectTargetLanguage{
-    return _selectTargetLanguage;
-  }
-
-  TranslateLanguage? get targetLanguage{
-    return _targetLanguage;
-  }
-
-  String get selectLanguageForLiveCamera{
-    return _selectLanguageForLiveCamera;
-  }
+  String get selectSourceLanguage => _selectSourceLanguage;
+  TranslateLanguage? get sourceLanguage => _sourceLanguage;
+  String get selectTargetLanguage => _selectTargetLanguage;
+  TranslateLanguage? get targetLanguage => _targetLanguage;
+  String get selectLanguageForLiveCamera => _selectLanguageForLiveCamera;
 
   void onSourceLanguageChanged(String? language){
     _selectSourceLanguage = language!;
@@ -113,9 +83,7 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   List<String> _looks = ["look 1", "look 2"];
-  List<String> get looks{
-    return [..._looks];
-  }
+  List<String> get looks => [..._looks];
 
   String _selectLook = "look 1";
   String get selectLook{
@@ -124,6 +92,13 @@ class TranslateProvider extends ChangeNotifier{
 
   void onLookChange(String look){
     _selectLook = look;
+    notifyListeners();
+  }
+
+  Future backToRecognizingScreen(BuildContext context) async{
+    await emptyImageData();
+    await emptyTextInputextAndTranslated();
+    Navigator.popAndPushNamed(context, "/recognizing screen");
     notifyListeners();
   }
 
@@ -157,33 +132,13 @@ class TranslateProvider extends ChangeNotifier{
     return const Icon(Icons.image);
   }
 
-  Icon get cameraIcon{
-    return const Icon(Icons.camera);
-  }
-
-  Icon get inputTextIcon{
-    return const Icon(Icons.edit);
-  }
-
-  String get headerRecognizedText{
-    return _headerRecognizedText;
-  }
-
-  String get headerTranslatedText{
-    return _headerTranslatedText;
-  }
-
-  String get recognizing{
-    return _recognizing;
-  }
-
-  String get result{
-    return _result;
-  }
-
-  String get selectCharLanguage{
-    return _selecChartLanguage;
-  }
+  Icon get cameraIcon => const Icon(Icons.camera);
+  Icon get inputTextIcon => const Icon(Icons.edit);
+  String get headerRecognizedText => _headerRecognizedText;
+  String get headerTranslatedText => _headerTranslatedText;
+  String get recognizing => _recognizing;
+  String get result => _result;
+  String get selectCharLanguage => _selecChartLanguage;
 
   imageFromGallery() async{
     XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -228,79 +183,105 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   Future checkAndDownloadModel() async{
-    isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
-    isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
-    isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
-    isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
-    isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
-    isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
-    isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
-    isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
-    isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
-    isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
-    isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
-    isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
+    try{
+      isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
+      isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
+      isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
+      isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
+      isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
+      isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
+      isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
+      isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
+      isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
+      isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
+      isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
+      isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
 
-    if(!isIndonesianDownloaded){
-      isIndonesianDownloaded = await modelManager.downloadModel(TranslateLanguage.indonesian.bcpCode);
-      notifyListeners();
+      if(!isIndonesianDownloaded!){
+        isIndonesianDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.indonesian.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isEnglishDownloaded){
+        isEnglishDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.english.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isChineseDownloaded){
+        isChineseDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isJapaneseDownloaded){
+        isJapaneseDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.japanese.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isKoreanDownloaded){
+        isKoreanDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.korean.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isArabicDownloaded){
+        isArabicDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
+        notifyListeners();
+      }
+
+      if(!isTurkishDownloaded){
+        isTurkishDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.turkish.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isGermanDownloaded){
+        isGermanDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.german.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isDutchDownloaded){
+        isDutchDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isHindiDownloaded){
+        isHindiDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.hindi.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isRussianDownloaded){
+        isRussianDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.russian.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isFrenchDownloaded){
+        isFrenchDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.french.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+    }catch(e){
+      rethrow;
     }
-
-    if(!isEnglishDownloaded){
-      isEnglishDownloaded = await modelManager.downloadModel(TranslateLanguage.english.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isChineseDownloaded){
-      isChineseDownloaded = await modelManager.downloadModel(TranslateLanguage.chinese.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isJapaneseDownloaded){
-      isJapaneseDownloaded = await modelManager.downloadModel(TranslateLanguage.japanese.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isKoreanDownloaded){
-      isKoreanDownloaded = await modelManager.downloadModel(TranslateLanguage.korean.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isArabicDownloaded){
-      isArabicDownloaded = await modelManager.downloadModel(TranslateLanguage.arabic.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isTurkishDownloaded){
-      isTurkishDownloaded = await modelManager.downloadModel(TranslateLanguage.turkish.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isGermanDownloaded){
-      isGermanDownloaded = await modelManager.downloadModel(TranslateLanguage.german.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isDutchDownloaded){
-      isDutchDownloaded = await modelManager.downloadModel(TranslateLanguage.dutch.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isHindiDownloaded){
-      isHindiDownloaded = await modelManager.downloadModel(TranslateLanguage.hindi.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isRussianDownloaded){
-      isRussianDownloaded = await modelManager.downloadModel(TranslateLanguage.russian.bcpCode);
-      notifyListeners();
-    }
-
-    if(!isFrenchDownloaded){
-      isFrenchDownloaded = await modelManager.downloadModel(TranslateLanguage.french.bcpCode);
-      notifyListeners();
-    }
-
     // if(isEnglishDownloaded && isIndonesianDownloaded){
     //   onDeviceTranslator = OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian);
     //   notifyListeners();
@@ -309,21 +290,9 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   Future translateText(String text)async{
-    if(isEnglishDownloaded && isIndonesianDownloaded){
+    if(isEnglishDownloaded && isIndonesianDownloaded!){
       final String response = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian).translateText(text);
       textIsTranslated = response;
-      notifyListeners();
-    }
-    notifyListeners();
-  }
-
-  Future translateInputText()async{
-    if(sourceLanguage != null && targetLanguage != null){
-      final String response = await OnDeviceTranslator(
-        sourceLanguage: sourceLanguage!,
-        targetLanguage: targetLanguage!,
-      ).translateText(inputTextController.text);
-      textTranslateInput = response;
       notifyListeners();
     }
     notifyListeners();
@@ -348,18 +317,9 @@ class TranslateProvider extends ChangeNotifier{
 
   //TODO CameraAndGalleryTranslatedScreen
   bool _translatedIsBelow = true;
-
-  Icon get arrowDownwardIcon{
-    return const Icon(Icons.arrow_downward);
-  }
-
-  Icon get arrowUpwardIcon{
-    return const Icon(Icons.arrow_upward);
-  }
-
-  bool get translatedIsBelow{
-    return _translatedIsBelow;
-  }
+  Icon get arrowDownwardIcon => const Icon(Icons.arrow_downward);
+  Icon get arrowUpwardIcon => const Icon(Icons.arrow_upward);
+  bool get translatedIsBelow => _translatedIsBelow;
 
   void onTextPositionChanged(){
     if(_translatedIsBelow==true){
@@ -372,7 +332,10 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future emptyData() async{
+  //TODO CameraAndGalleryTranslatedScreen
+  Color textFromImagecolor = const Color(0xff4C4C6D);
+
+  Future emptyImageData() async{
     image = null;
     textIsRecognized = "";
     textIsTranslated  ="";
@@ -380,19 +343,36 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future backToRecognizingScreen(BuildContext context) async{
-    await emptyData();
-    Navigator.popAndPushNamed(context, "/recognizing screen");
+  //TODO TranslateInputTextScreen
+  String _inputLabel = "input";
+  String _translateLabel = "translate";
+  TextEditingController inputTextController = TextEditingController();
+  String _textTranslateInput = "";
+  Color _inputTextColor = const Color(0xff2E3840);
+
+  String get inputLabel => _inputLabel;
+  String get translateLabel => _translateLabel;
+  String get textTranslateInput =>_textTranslateInput;
+  Color get inputTextColor => _inputTextColor;
+
+  Future translateInputText()async{
+    if(sourceLanguage != null && targetLanguage != null){
+    // if(isEnglishDownloaded && isIndonesianDownloaded){
+      final String response = await OnDeviceTranslator(
+        sourceLanguage: sourceLanguage!,
+        // sourceLanguage: TranslateLanguage.indonesian,
+        targetLanguage: targetLanguage!,
+        // targetLanguage: TranslateLanguage.english!,
+      ).translateText(inputTextController.text);
+      _textTranslateInput = await response;
+      notifyListeners();
+    }
     notifyListeners();
   }
 
-  //TODO CameraAndGalleryTranslatedScreen
-  Color textFromImagecolor = const Color(0xff4C4C6D);
-
-  //TODO TranslateInputTextScreen
-  String inputLabel = "input";
-  String translateLabel = "translate";
-  TextEditingController inputTextController = TextEditingController();
-  String textTranslateInput = "";
-  Color inputTextColor = const Color(0xff2E3840);
+  Future emptyTextInputextAndTranslated() async {
+    inputTextController.text = "";
+    _textTranslateInput = "";
+    notifyListeners();
+  }
 }

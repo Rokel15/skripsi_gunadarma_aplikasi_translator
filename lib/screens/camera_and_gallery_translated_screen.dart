@@ -21,9 +21,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
       builder: (context, translateProvider, child){
         return PopScope(
           canPop: false,
-          onPopInvoked: (didPop){
-            translateProvider.backToRecognizingScreen(context);
-          },
+          onPopInvoked: (didPop){translateProvider.backToRecognizingScreen(context);},
           child: Scaffold(
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(0),
