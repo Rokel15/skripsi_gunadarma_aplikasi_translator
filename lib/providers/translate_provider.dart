@@ -7,6 +7,8 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../main.dart';
+
 class TranslateProvider extends ChangeNotifier{
   TextStyle roboto14Italic = GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400,);
   TextStyle roboto14 = GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500,);
@@ -87,7 +89,33 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  //TODO RecognizingScreen
+  // TODO RecognizingScreen
+  late CameraController cameraController;
+  initializeCamera() async{
+    cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    cameraController.initialize().then((_) {
+      // if (!mounted) {
+      //   return;
+      // }
+      // setState(() {});
+      notifyListeners();
+    }).catchError((Object e) {
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+          // Handle access errors here.
+            break;
+          default:
+          // Handle other errors here.
+            break;
+        }
+        notifyListeners();
+      }
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
   String _recognizing = "Recognizing...";
   io.File? image;
   ImagePicker imagePicker = ImagePicker();
@@ -113,10 +141,8 @@ class TranslateProvider extends ChangeNotifier{
   String textIsRecognized = "";
   String textIsTranslated = "";
 
-  Icon get galleryIcon{
-    return const Icon(Icons.image);
-  }
-
+  Icon get languageIcon => const Icon(Icons.public);
+  Icon get galleryIcon => const Icon(Icons.image);
   Icon get cameraIcon => const Icon(Icons.camera);
   Icon get inputTextIcon => const Icon(Icons.edit);
   String get headerRecognizedText => _headerRecognizedText;

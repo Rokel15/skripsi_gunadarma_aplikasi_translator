@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_gallery.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_text_by_user.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_language_from_live_camera.dart';
 import '../main.dart';
 import '../providers/translate_provider.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class RecognizingScreen extends StatefulWidget {
   const RecognizingScreen({super.key});
@@ -16,32 +18,31 @@ class RecognizingScreen extends StatefulWidget {
 }
 
 class _RecognizingScreenState extends State<RecognizingScreen> {
-  late CameraController cameraController;
+  // late CameraController cameraController;
   
   @override
   void initState(){
     super.initState();
-
     // Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
 
-    cameraController = CameraController(cameras[0], ResolutionPreset.high);
-    cameraController.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-          // Handle access errors here.
-            break;
-          default:
-          // Handle other errors here.
-            break;
-        }
-      }
-    });
+    // cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    // cameraController.initialize().then((_) {
+    //   if (!mounted) {
+    //     return;
+    //   }
+    //   setState(() {});
+    // }).catchError((Object e) {
+    //   if (e is CameraException) {
+    //     switch (e.code) {
+    //       case 'CameraAccessDenied':
+    //       // Handle access errors here.
+    //         break;
+    //       default:
+    //       // Handle other errors here.
+    //         break;
+    //     }
+    //   }
+    // });
   }
 
   @override
@@ -65,7 +66,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: CameraPreview(
-                          cameraController,
+                          translateProvider.cameraController,
                         ),
                       ),
 
@@ -73,33 +74,29 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       alignment: Alignment.topLeft,
                         child: Container(
                           margin:  const EdgeInsets.only(top: 20, left: 20),
-                          child: Text(translateProvider.recognizing),
+                          child: AnimatedTextKit(
+                            repeatForever: true,
+                            animatedTexts: [
+                              FadeAnimatedText(translateProvider.recognizing, textStyle: translateProvider.roboto16Bold)
+                            ],
+                          ),
                         ),
                       ),
-                      
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 8, right: 16),
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24), color: Colors.black,
-                          ),
-                          child: DropdownButton(
-                            underline: Container(),
-                            value: translateProvider.selectLanguageForLiveCamera,
-                            items: translateProvider.languages.map((String val){
-                              return DropdownMenuItem(
-                                value: val,
-                                child: Row(
-                                  children: [
-                                    Text(val)
-                                  ],
-                                ),);
-                            }).toList(),
-                            onChanged: (String? val) => translateProvider.onLanguageChangedForLiveCamera(val),
-                          ),
-                        ),
+
+                      SelectLanguageFromLiveCamera(
+                        value: translateProvider.selectLanguageForLiveCamera,
+                        items: translateProvider.languages.map((String val){
+                          return DropdownMenuItem(
+                            value: val,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.language), const Text("  "),
+                                Text(val, style: translateProvider.roboto14SemiBold,),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? val){translateProvider.onLanguageChangedForLiveCamera(val);},
                       ),
 
                       Align(
@@ -149,9 +146,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: const BoxDecoration(
-                    color: Color(0xff31363F),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-                  ),
+                    color: Color(0xff31363F), borderRadius: BorderRadius.vertical(top: Radius.circular(25)),),
                   child: ListView(
                     children: [
                       Align(
@@ -166,14 +161,10 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                               ),
                             );
                           }).toList(),
-                          onChanged: (String? val) {
-                            translateProvider.onLanguageChangedForLiveCamera(val);
-                            },
+                          onChanged: (String? val) => translateProvider.onLanguageChangedForLiveCamera(val),
                         ),
                       ),
-                      Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                      ),
+                      Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",),
                     ],
                   ),
                 ),

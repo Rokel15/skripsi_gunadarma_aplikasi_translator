@@ -23,7 +23,9 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<TranslateProvider>(
-          create: (context) => TranslateProvider()..checkAndDownloadModel(),
+          create: (context) => TranslateProvider()
+            ..checkAndDownloadModel()
+            ..initializeCamera(),
           // create: (context) => TranslateProvider(),
         ),
       ],
