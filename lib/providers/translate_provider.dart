@@ -1,6 +1,7 @@
 import 'dart:io' as io;
 import 'dart:ui';
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,12 +92,13 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  // TODO RecognizingScreen
+  //TODO RecognizingScreen
+  String _recognizingTextSign = "Recognizing...";
   late CameraController cameraController;
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   Color cameraCoverColor = const Color(0xff686D76);
   bool _cameraStatus = false;
-  String frameIcon = "image/frameIcon.png";
+  String _frameIcon = "image/frameIcon.png";
   CameraImage? _cameraImage;
   bool isBusy = false;
   String _scanResult = "";
@@ -239,7 +241,6 @@ class TranslateProvider extends ChangeNotifier{
   //   return CustomPaint(painter: painter,);
   // }
 
-  String _recognizingTextSign = "Recognizing...";
   io.File? image;
   ImagePicker imagePicker = ImagePicker();
   String _result = "";
@@ -264,6 +265,8 @@ class TranslateProvider extends ChangeNotifier{
   String textIsTranslated = "";
 
   Icon get languageIcon => const Icon(Icons.public);
+  String get frameIcon => _frameIcon;
+  IconData get setCameraStatusIcon => Icons.camera_alt;
   Icon get galleryIcon => const Icon(Icons.image);
   Icon get cameraIcon => const Icon(Icons.camera);
   Icon get inputTextIcon => const Icon(Icons.edit);

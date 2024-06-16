@@ -8,6 +8,7 @@ import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_ima
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_text_by_user.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/recognize_text_sign.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_language_from_live_camera.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/switch_camera_status.dart';
 import '../main.dart';
 import '../providers/translate_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -65,13 +66,6 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                   height: MediaQuery.of(context).size.height * 3.4 / 5,
                   child: Stack(
                     children: [
-                      // SizedBox(
-                      //   width: double.infinity,
-                      //   child: translateProvider.cameraStatus == false?
-                      //   Container(decoration: const BoxDecoration(color: Color(0xff686D76),),) :
-                      //   CameraPreview(translateProvider.cameraController,),
-                      // ),
-
                       CameraView(
                         cameraStatus: translateProvider.cameraStatus,
                         containerColor: translateProvider.cameraCoverColor,
@@ -111,19 +105,6 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                         textStyle: translateProvider.roboto16Bold,
                       ),
 
-                      // Align(
-                      // alignment: Alignment.topLeft,
-                      //   child: Container(
-                      //     margin:  const EdgeInsets.only(top: 20, left: 20),
-                      //     child: AnimatedTextKit(
-                      //       repeatForever: true,
-                      //       animatedTexts: [
-                      //         FadeAnimatedText(translateProvider.recognizingTextSign, textStyle: translateProvider.roboto16Bold)
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-
                       SelectLanguageFromLiveCamera(
                         value: translateProvider.selectLanguageForLiveCamera,
                         items: translateProvider.languages.map((String val){
@@ -131,7 +112,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                             value: val,
                             child: Row(
                               children: [
-                                const Icon(Icons.language), const Text("  "),
+                                translateProvider.languageIcon, const Text("  "),
                                 Text(val, style: translateProvider.roboto14SemiBold,),
                               ],
                             ),
@@ -140,31 +121,10 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                         onChanged: (String? val){translateProvider.onLanguageChangedForLiveCamera(val);},
                       ),
 
-                      Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              child: Stack(
-                                  children: [
-                                    Image.asset(
-                                      translateProvider.frameIcon,
-                                      height: MediaQuery.of(context).size.width*1/5.8,
-                                      width: MediaQuery.of(context).size.width*1/5.8,
-                                    ),
-
-                                    Icon(
-                                      Icons.camera_alt,
-                                      size: MediaQuery.of(context).size.width*1/5.8,
-                                    ),
-                                  ]
-                              ),
-                              onTap: (){translateProvider.setCameraStatus();},
-                            ),
-                            const SizedBox(width: 14,),
-                          ],
-                        ),
+                      SwitchCameraStatus(
+                        frameIcon: translateProvider.frameIcon,
+                        setCameraStatusIcon: translateProvider.setCameraStatusIcon,
+                        setCameraStatus: translateProvider.setCameraStatus,
                       ),
 
                       Align(
@@ -232,7 +192,6 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                         ),
                       ),
                       Text(translateProvider.textResult)
-                          // != null? "no text recognized" : translateProvider.scanResult),
                     ],
                   ),
                 ),
