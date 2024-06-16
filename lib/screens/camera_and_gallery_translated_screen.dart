@@ -50,7 +50,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                 Column(
                   children: [
                     TextIsRecognized(
-                      recognizedTextColor: translateProvider.textFromImagecolor,
+                      recognizedTextColor: translateProvider.textFromImageColor,
                       headerText: translateProvider.headerRecognizedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},
@@ -60,7 +60,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                     const SizedBox(height: 30,),
 
                     TextIsTranslated(
-                      translatedTextColor: translateProvider.textFromImagecolor,
+                      translatedTextColor: translateProvider.textFromImageColor,
                       headerText: translateProvider.headerTranslatedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},
@@ -71,7 +71,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                 Column(
                   children: [
                     TextIsTranslated(
-                      translatedTextColor: translateProvider.textFromImagecolor,
+                      translatedTextColor: translateProvider.textFromImageColor,
                       headerText: translateProvider.headerTranslatedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowUpwardIcon:translateProvider.arrowDownwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},
@@ -81,7 +81,7 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
                     const SizedBox(height: 30,),
 
                     TextIsRecognized(
-                      recognizedTextColor: translateProvider.textFromImagecolor,
+                      recognizedTextColor: translateProvider.textFromImageColor,
                       headerText: translateProvider.headerRecognizedText,
                       icon: translateProvider.translatedIsBelow==true? translateProvider.arrowDownwardIcon:translateProvider.arrowUpwardIcon,
                       onTapIcon: (){translateProvider.onTextPositionChanged();},

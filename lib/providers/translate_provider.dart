@@ -1,13 +1,15 @@
-import 'dart:ffi';
 import 'dart:io' as io;
+import 'dart:ui';
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_recognized.dart';
 import '../main.dart';
+import '../widgets/recognizing_screen/text_recognition_painter.dart';
 
 class TranslateProvider extends ChangeNotifier{
   TextStyle roboto14Italic = GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400,);
@@ -21,7 +23,7 @@ class TranslateProvider extends ChangeNotifier{
   TextStyle roboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700,);
 
   Map<String, dynamic> _languages = {
-    "select language": nullptr,
+    "select language": null,
     "English": TranslateLanguage.english,
     "Indonesian": TranslateLanguage.indonesian,
     "Chinese": TranslateLanguage.chinese,
@@ -91,13 +93,45 @@ class TranslateProvider extends ChangeNotifier{
 
   // TODO RecognizingScreen
   late CameraController cameraController;
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  Color cameraCoverColor = const Color(0xff686D76);
+  bool _cameraStatus = false;
+  String frameIcon = "image/frameIcon.png";
+  CameraImage? _cameraImage;
+  bool isBusy = false;
+  String _scanResult = "";
+  String _textResult = "";
+  String emptyResult = "no text recognized";
+
+  bool get cameraStatus => _cameraStatus;
+  CameraImage get cameraImage => _cameraImage!;
+  String get scanResult => _scanResult;
+  String get textResult => _textResult!;
+
+  setCameraStatus(){
+    if(cameraStatus==false){
+      _cameraStatus = true;
+    } else{
+      _cameraStatus = false;
+    }
+  }
+
   initializeCamera() async{
+    // textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     cameraController = CameraController(cameras[0], ResolutionPreset.high);
-    cameraController.initialize().then((_) {
+    await cameraController.initialize().then((_) {
       // if (!mounted) {
       //   return;
       // }
       // setState(() {});
+      cameraController.startImageStream((image) {
+        if(!isBusy){
+          isBusy = true;
+        _cameraImage = image;
+        doTextRecognitionOnLiveCamera();
+        notifyListeners();
+        };
+      });
       notifyListeners();
     }).catchError((Object e) {
       if (e is CameraException) {
@@ -109,19 +143,107 @@ class TranslateProvider extends ChangeNotifier{
           // Handle other errors here.
             break;
         }
+        // notifyListeners();
+      }
+      // notifyListeners();
+    });
+    // notifyListeners();
+  }
+
+  @override
+  dispose(){
+    cameraController.dispose();
+    super.dispose();
+    // notifyListeners();
+  }
+
+  getInputImageFromLiveCamera(){
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final Plane plane in cameraImage.planes){
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+    final Size imageSize = Size(cameraImage.width.toDouble(), cameraImage.height.toDouble());
+    final camera = cameras[0];
+    final bytesPerRow = cameraImage.planes[0].bytesPerRow;
+    final imageRotation =  InputImageRotationValue.fromRawValue(camera.sensorOrientation);
+    final inputImageFormat = InputImageFormatValue.fromRawValue(cameraImage.format.raw);
+    // final planeData = cameraImage!.planes.map(
+    //       (Plane plane) {
+    //     return InputImagePlaneMetadata(
+    //       bytesPerRow: plane.bytesPerRow,
+    //       height: plane.height,
+    //       width: plane.width,
+    //     );
+    //   },
+    // ).toList();
+    final metadata = InputImageMetadata(
+      bytesPerRow: bytesPerRow,
+      size: imageSize,
+      rotation: imageRotation!,
+      format: inputImageFormat!,
+    );
+
+    final inputImage = InputImage.fromBytes(
+      bytes: bytes, metadata: metadata
+    );
+
+    notifyListeners();
+    return inputImage;
+  }
+
+  doTextRecognitionOnLiveCamera() async {
+    var frameImage = getInputImageFromLiveCamera();
+    RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
+
+    for (TextBlock block in recognizedText.blocks){
+      final Rect rect = block.boundingBox;
+      final List cornerPoints = block.cornerPoints;
+      final String text = block.text;
+      final List<String> languages = block.recognizedLanguages;
+
+      for (TextLine line in block.lines) {
+        // Same getters as TextBlock
+        for (TextElement element in line.elements) {
+          _scanResult += element.text+" ";
+          // Same getters as TextBlock
+          notifyListeners();
+        }
+        _scanResult += "\n";
         notifyListeners();
       }
+      _scanResult += "\n";
       notifyListeners();
-    });
+    }
+
+    // _scanResult = recognizedText;
+    isBusy = false;
+    _textResult = scanResult;
     notifyListeners();
   }
 
-  String _recognizing = "Recognizing...";
+  // Widget textResultFromLiveCamera() {
+  //   if (_scanResult == null ||
+  //       // cameraController == null ||
+  //       !cameraController.value.isInitialized) {
+  //     notifyListeners();
+  //     return const Text('');
+  //   }
+  //
+  //   final Size imageSize = Size(
+  //     cameraController.value.previewSize!.height,
+  //     cameraController.value.previewSize!.width,
+  //   );
+  //   CustomPainter painter = TextRecognitionPainter(imageSize, _scanResult);
+  //   notifyListeners();
+  //   return CustomPaint(painter: painter,);
+  // }
+
+  String _recognizingTextSign = "Recognizing...";
   io.File? image;
   ImagePicker imagePicker = ImagePicker();
   String _result = "";
   String _selecChartLanguage = "select language";
-  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   final modelManager = OnDeviceTranslatorModelManager();
   bool isIndonesianDownloaded = false;
   bool isEnglishDownloaded = false;
@@ -147,7 +269,7 @@ class TranslateProvider extends ChangeNotifier{
   Icon get inputTextIcon => const Icon(Icons.edit);
   String get headerRecognizedText => _headerRecognizedText;
   String get headerTranslatedText => _headerTranslatedText;
-  String get recognizing => _recognizing;
+  String get recognizingTextSign => _recognizingTextSign;
   String get result => _result;
   String get selectCharLanguage => _selecChartLanguage;
 
@@ -194,114 +316,110 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   Future checkAndDownloadModel() async{
-    try{
-      isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
-      isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
-      isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
-      isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
-      isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
-      isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
-      isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
-      isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
-      isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
-      isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
-      isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
-      isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
-
-      if(!isIndonesianDownloaded!){
-        isIndonesianDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.indonesian.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isEnglishDownloaded){
-        isEnglishDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.english.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isChineseDownloaded){
-        isChineseDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isJapaneseDownloaded){
-        isJapaneseDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.japanese.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isKoreanDownloaded){
-        isKoreanDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.korean.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isArabicDownloaded){
-        isArabicDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
-        notifyListeners();
-      }
-
-      if(!isTurkishDownloaded){
-        isTurkishDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.turkish.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isGermanDownloaded){
-        isGermanDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.german.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isDutchDownloaded){
-        isDutchDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isHindiDownloaded){
-        isHindiDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.hindi.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isRussianDownloaded){
-        isRussianDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.russian.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isFrenchDownloaded){
-        isFrenchDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.french.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-    }catch(e){
-      rethrow;
-    }
-    // if(isEnglishDownloaded && isIndonesianDownloaded){
-    //   onDeviceTranslator = OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian);
-    //   notifyListeners();
+    // try{
+      // isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
+      // isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
+      // isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
+      // isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
+      // isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
+      // isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
+      // isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
+      // isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
+      // isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
+      // isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
+      // isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
+      // isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
+      //
+      // if(!isIndonesianDownloaded){
+      //   isIndonesianDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.indonesian.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isEnglishDownloaded){
+      //   isEnglishDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.english.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isChineseDownloaded){
+      //   isChineseDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isJapaneseDownloaded){
+      //   isJapaneseDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.japanese.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isKoreanDownloaded){
+      //   isKoreanDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.korean.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isArabicDownloaded){
+      //   isArabicDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
+      //   notifyListeners();
+      // }
+      //
+      // if(!isTurkishDownloaded){
+      //   isTurkishDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.turkish.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isGermanDownloaded){
+      //   isGermanDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.german.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isDutchDownloaded){
+      //   isDutchDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isHindiDownloaded){
+      //   isHindiDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.hindi.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isRussianDownloaded){
+      //   isRussianDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.russian.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isFrenchDownloaded){
+      //   isFrenchDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.french.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+    //   }
+    // }catch(e){
+    //   rethrow;
     // }
     notifyListeners();
   }
 
   Future translateText(String text)async{
-    if(isEnglishDownloaded && isIndonesianDownloaded!){
+    if(isEnglishDownloaded && isIndonesianDownloaded){
       final String response = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian).translateText(text);
       textIsTranslated = response;
       notifyListeners();
@@ -321,12 +439,8 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  void goToLcTranslated({required BuildContext context}){
-    Navigator.pushNamed(context, "/lc translated look1 screen");
-    notifyListeners();
-  }
-
   //TODO CameraAndGalleryTranslatedScreen
+  Color textFromImageColor = const Color(0xff4C4C6D);
   bool _translatedIsBelow = true;
   Icon get arrowDownwardIcon => const Icon(Icons.arrow_downward);
   Icon get arrowUpwardIcon => const Icon(Icons.arrow_upward);
@@ -342,9 +456,6 @@ class TranslateProvider extends ChangeNotifier{
     }
     notifyListeners();
   }
-
-  //TODO CameraAndGalleryTranslatedScreen
-  Color textFromImagecolor = const Color(0xff4C4C6D);
 
   Future emptyImageData() async{
     image = null;
@@ -375,7 +486,7 @@ class TranslateProvider extends ChangeNotifier{
         targetLanguage: targetLanguage!,
         // targetLanguage: TranslateLanguage.english!,
       ).translateText(inputTextController.text);
-      _textTranslateInput = await response;
+      _textTranslateInput = response;
       notifyListeners();
     }
     notifyListeners();

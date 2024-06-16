@@ -41,6 +41,8 @@ dependencies:
   image_picker: ^1.1.1
   google_mlkit_text_recognition: ^0.13.0
   google_mlkit_translation: 0.11.0
+#  google_mlkit_text_recognition: ^0.4.0
+#  google_mlkit_translation: 0.4.0
   animated_text_kit: ^4.2.2
 
 dev_dependencies:
@@ -66,8 +68,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+   - image/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

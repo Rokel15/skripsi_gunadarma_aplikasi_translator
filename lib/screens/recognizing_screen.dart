@@ -1,10 +1,12 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/camera_view.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_gallery.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_text_by_user.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/recognize_text_sign.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_language_from_live_camera.dart';
 import '../main.dart';
 import '../providers/translate_provider.dart';
@@ -57,31 +59,70 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
           body: Column(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.horizontal(left: Radius.circular(40), right: Radius.circular(40),),
+                borderRadius: BorderRadius.circular(40),
                 child: SizedBox(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 3.4 / 5,
                   child: Stack(
                     children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: CameraPreview(
-                          translateProvider.cameraController,
-                        ),
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   child: translateProvider.cameraStatus == false?
+                      //   Container(decoration: const BoxDecoration(color: Color(0xff686D76),),) :
+                      //   CameraPreview(translateProvider.cameraController,),
+                      // ),
+
+                      CameraView(
+                        cameraStatus: translateProvider.cameraStatus,
+                        containerColor: translateProvider.cameraCoverColor,
+                        cameraController: translateProvider.cameraController,
                       ),
 
-                      Align(
-                      alignment: Alignment.topLeft,
-                        child: Container(
-                          margin:  const EdgeInsets.only(top: 20, left: 20),
-                          child: AnimatedTextKit(
-                            repeatForever: true,
-                            animatedTexts: [
-                              FadeAnimatedText(translateProvider.recognizing, textStyle: translateProvider.roboto16Bold)
-                            ],
-                          ),
-                        ),
+                      // translateProvider.textResultFromLiveCamera(),
+
+                      // Positioned(
+                      //   top: 0.0,
+                      //   left: 0.0,
+                      //   child:
+                      //   translateProvider.textResultFromLiveCamera(),
+                      // ),
+
+                    // Widget textResultFromLiveCamera() {
+                    //   return Container();
+              // if (_scanResult == null ||
+              // // cameraController == null ||
+              // !cameraController.value.isInitialized) {
+              // notifyListeners();
+              // return const Text('');
+              // }
+              //
+              // final Size imageSize = Size(
+              // cameraController.value.previewSize!.height,
+              // cameraController.value.previewSize!.width,
+              // );
+              // CustomPainter painter = TextRecognitionPainter(imageSize, _scanResult);
+              // notifyListeners();
+              // return CustomPaint(painter: painter,);
+              // }
+
+                      RecognizeTextSign(
+                        cameraStatus: translateProvider.cameraStatus,
+                        recognizingTextSign: translateProvider.recognizingTextSign,
+                        textStyle: translateProvider.roboto16Bold,
                       ),
+
+                      // Align(
+                      // alignment: Alignment.topLeft,
+                      //   child: Container(
+                      //     margin:  const EdgeInsets.only(top: 20, left: 20),
+                      //     child: AnimatedTextKit(
+                      //       repeatForever: true,
+                      //       animatedTexts: [
+                      //         FadeAnimatedText(translateProvider.recognizingTextSign, textStyle: translateProvider.roboto16Bold)
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SelectLanguageFromLiveCamera(
                         value: translateProvider.selectLanguageForLiveCamera,
@@ -100,13 +141,39 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       ),
 
                       Align(
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              child: Stack(
+                                  children: [
+                                    Image.asset(
+                                      translateProvider.frameIcon,
+                                      height: MediaQuery.of(context).size.width*1/5.8,
+                                      width: MediaQuery.of(context).size.width*1/5.8,
+                                    ),
+
+                                    Icon(
+                                      Icons.camera_alt,
+                                      size: MediaQuery.of(context).size.width*1/5.8,
+                                    ),
+                                  ]
+                              ),
+                              onTap: (){translateProvider.setCameraStatus();},
+                            ),
+                            const SizedBox(width: 14,),
+                          ],
+                        ),
+                      ),
+
+                      Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 20,),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-
                               InputImageFromGallery(
                                 icon: translateProvider.galleryIcon,
                                 onTapIcon: () async{
@@ -164,12 +231,18 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                           onChanged: (String? val) => translateProvider.onLanguageChangedForLiveCamera(val),
                         ),
                       ),
-                      Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",),
+                      Text(translateProvider.textResult)
+                          // != null? "no text recognized" : translateProvider.scanResult),
                     ],
                   ),
                 ),
               ),
             ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            shape: const CircleBorder(),
+            child: const Icon(Icons.restart_alt),
+            onPressed: (){},
           ),
         );
       },
