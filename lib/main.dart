@@ -25,7 +25,7 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
         ChangeNotifierProvider<TranslateProvider>(
           create: (context) => TranslateProvider()
             ..checkAndDownloadModel()
-            ..initializeCamera(),
+            // ..initializeCamera(),
         ),
       ],
       child: MaterialApp(

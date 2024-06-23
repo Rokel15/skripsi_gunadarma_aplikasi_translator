@@ -6,6 +6,7 @@ import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/camera_vi
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_gallery.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_text_by_user.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/other_features.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/recognize_text_sign.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_language_from_live_camera.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/switch_camera_status.dart';
@@ -68,6 +69,8 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                     children: [
                       CameraView(
                         cameraStatus: translateProvider.cameraStatus,
+                        label: translateProvider.openCameraInstruction,
+                        textStyle: translateProvider.roboto16Bold,
                         containerColor: translateProvider.cameraCoverColor,
                         cameraController: translateProvider.cameraController,
                       ),
@@ -124,41 +127,23 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       SwitchCameraStatus(
                         frameIcon: translateProvider.frameIcon,
                         setCameraStatusIcon: translateProvider.setCameraStatusIcon,
-                        setCameraStatus: translateProvider.setCameraStatus,
+                        setCameraStatus: (){translateProvider.setCameraStatus();}
                       ),
 
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 20,),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InputImageFromGallery(
-                                icon: translateProvider.galleryIcon,
-                                onTapIcon: () async{
-                                  await translateProvider.imageFromGallery();
-                                  translateProvider.recognizeTextAndTranslate(context);
-                                },
-                              ),
-
-                              InputImageFromCamera(
-                                icon: translateProvider.cameraIcon,
-                                onTapIcon: () async{
-                                  await translateProvider.imageFromCamera();
-                                  translateProvider.recognizeTextAndTranslate(context);
-                                },
-                              ),
-
-                              InputTextByUser(
-                                icon: translateProvider.inputTextIcon,
-                                onTapIcon: () async{
-                                  await translateProvider.goToInputTextAndTranslate(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
+                      OtherFeatures(
+                        galleryIcon: translateProvider.galleryIcon,
+                        cameraIcon: translateProvider.cameraIcon,
+                        inputTextIcon: translateProvider.inputTextIcon,
+                        // otherFeatureIconSize: translateProvider.otherFeatureIconSize,
+                        onTapGalleryIcon: () async{
+                          await translateProvider.imageFromGallery();
+                          translateProvider.recognizeTextAndTranslate(context);
+                        },
+                        onTapCameraIcon: ()async{
+                          await translateProvider.imageFromCamera();
+                          translateProvider.imageFromGallery();
+                        },
+                        onTapInputTextIcon: () => translateProvider.goToInputTextAndTranslate(context),
                       ),
                     ]
                   ),
@@ -200,8 +185,11 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             shape: const CircleBorder(),
-            child: const Icon(Icons.restart_alt),
-            onPressed: (){},
+            backgroundColor: Color(0xff4D4C7D),
+            child: const Icon(Icons.restart_alt, color: Colors.white,),
+            onPressed: (){
+              translateProvider.emptyTextFromLiveCamera();
+            },
           ),
         );
       },

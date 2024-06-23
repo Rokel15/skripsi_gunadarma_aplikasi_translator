@@ -94,33 +94,41 @@ class TranslateProvider extends ChangeNotifier{
 
   //TODO RecognizingScreen
   String _recognizingTextSign = "Recognizing...";
-  late CameraController cameraController;
+  // late CameraController cameraController;
+  CameraController cameraController = CameraController(cameras[0], ResolutionPreset.high);
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   Color cameraCoverColor = const Color(0xff686D76);
   bool _cameraStatus = false;
   String _frameIcon = "image/frameIcon.png";
+  String openCameraInstruction = "Open Camera!";
   CameraImage? _cameraImage;
   bool isBusy = false;
   String _scanResult = "";
   String _textResult = "";
-  String emptyResult = "no text recognized";
+  final _isNotScanningResult = "no text recognized";
 
   bool get cameraStatus => _cameraStatus;
   CameraImage get cameraImage => _cameraImage!;
   String get scanResult => _scanResult;
-  String get textResult => _textResult!;
+  String get textResult => _textResult;
+  String get isNotScanningResult => _isNotScanningResult;
 
-  setCameraStatus(){
+  setCameraStatus()async{
     if(cameraStatus==false){
       _cameraStatus = true;
+      await initializeCamera();
+      notifyListeners();
     } else{
       _cameraStatus = false;
+      cameraController.stopImageStream();
+      emptyTextFromLiveCamera();
+      notifyListeners();
     }
+    notifyListeners();
   }
 
   initializeCamera() async{
-    // textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    // cameraController = CameraController(cameras[0], ResolutionPreset.high);
     await cameraController.initialize().then((_) {
       // if (!mounted) {
       //   return;
@@ -224,6 +232,11 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  emptyTextFromLiveCamera(){
+    _textResult = "no text recognized";
+    notifyListeners();
+  }
+
   // Widget textResultFromLiveCamera() {
   //   if (_scanResult == null ||
   //       // cameraController == null ||
@@ -267,9 +280,10 @@ class TranslateProvider extends ChangeNotifier{
   Icon get languageIcon => const Icon(Icons.public);
   String get frameIcon => _frameIcon;
   IconData get setCameraStatusIcon => Icons.camera_alt;
-  Icon get galleryIcon => const Icon(Icons.image);
-  Icon get cameraIcon => const Icon(Icons.camera);
-  Icon get inputTextIcon => const Icon(Icons.edit);
+  IconData get galleryIcon => Icons.image;
+  IconData get cameraIcon => Icons.camera;
+  IconData get inputTextIcon => Icons.edit;
+  // double get otherFeatureIconSize => _otherFeatureIconSize;
   String get headerRecognizedText => _headerRecognizedText;
   String get headerTranslatedText => _headerTranslatedText;
   String get recognizingTextSign => _recognizingTextSign;
@@ -319,105 +333,105 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   Future checkAndDownloadModel() async{
-    // try{
-      // isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
-      // isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
-      // isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
-      // isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
-      // isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
-      // isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
-      // isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
-      // isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
-      // isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
-      // isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
-      // isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
-      // isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
-      //
-      // if(!isIndonesianDownloaded){
-      //   isIndonesianDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.indonesian.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isEnglishDownloaded){
-      //   isEnglishDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.english.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isChineseDownloaded){
-      //   isChineseDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isJapaneseDownloaded){
-      //   isJapaneseDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.japanese.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isKoreanDownloaded){
-      //   isKoreanDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.korean.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isArabicDownloaded){
-      //   isArabicDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
-      //   notifyListeners();
-      // }
-      //
-      // if(!isTurkishDownloaded){
-      //   isTurkishDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.turkish.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isGermanDownloaded){
-      //   isGermanDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.german.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isDutchDownloaded){
-      //   isDutchDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isHindiDownloaded){
-      //   isHindiDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.hindi.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isRussianDownloaded){
-      //   isRussianDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.russian.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-      // }
-      //
-      // if(!isFrenchDownloaded){
-      //   isFrenchDownloaded = await modelManager.downloadModel(
-      //     TranslateLanguage.french.bcpCode, isWifiRequired: false,
-      //   );
-      //   notifyListeners();
-    //   }
-    // }catch(e){
-    //   rethrow;
-    // }
+    try{
+      isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
+      isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
+      isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
+      isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
+      isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
+      isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
+      isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
+      isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
+      isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
+      isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
+      isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
+      isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
+
+      if(!isIndonesianDownloaded){
+        isIndonesianDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.indonesian.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isEnglishDownloaded){
+        isEnglishDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.english.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isChineseDownloaded){
+        isChineseDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isJapaneseDownloaded){
+        isJapaneseDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.japanese.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isKoreanDownloaded){
+        isKoreanDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.korean.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isArabicDownloaded){
+        isArabicDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
+        notifyListeners();
+      }
+
+      if(!isTurkishDownloaded){
+        isTurkishDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.turkish.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isGermanDownloaded){
+        isGermanDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.german.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isDutchDownloaded){
+        isDutchDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isHindiDownloaded){
+        isHindiDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.hindi.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isRussianDownloaded){
+        isRussianDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.russian.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+
+      if(!isFrenchDownloaded){
+        isFrenchDownloaded = await modelManager.downloadModel(
+          TranslateLanguage.french.bcpCode, isWifiRequired: false,
+        );
+        notifyListeners();
+      }
+    }catch(e){
+      rethrow;
+    }
     notifyListeners();
   }
 

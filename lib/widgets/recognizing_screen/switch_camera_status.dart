@@ -25,13 +25,13 @@ class SwitchCameraStatus extends StatelessWidget {
                 children: [
                   Image.asset(
                     frameIcon,
-                    height: MediaQuery.of(context).size.width*1/5.8,
-                    width: MediaQuery.of(context).size.width*1/5.8,
+                    height: MediaQuery.of(context).size.width*1/6.2,
+                    width: MediaQuery.of(context).size.width*1/6.2,
                   ),
 
                   Icon(
                     setCameraStatusIcon,
-                    size: MediaQuery.of(context).size.width*1/5.8,
+                    size: MediaQuery.of(context).size.width*1/6.2,
                   ),
                 ]
             ),
