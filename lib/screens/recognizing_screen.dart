@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:skripsi_aplikasi_translator/providers/download_language_model_provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/camera_view.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_gallery.dart';
@@ -27,6 +28,8 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
   @override
   void initState(){
     super.initState();
+    Provider.of<DownloadLanguageModelProvider>(context, listen: false).checkAndDownloadModel();
+
     // Provider.of<TranslateProvider>(context, listen: false).checkAndDownloadModel();
 
     // cameraController = CameraController(cameras[0], ResolutionPreset.high);
@@ -156,7 +159,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                 child: Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                   decoration: const BoxDecoration(
                     color: Color(0xff31363F), borderRadius: BorderRadius.vertical(top: Radius.circular(25)),),
                   child: ListView(
@@ -176,7 +179,8 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                           onChanged: (String? val) => translateProvider.onLanguageChangedForLiveCamera(val),
                         ),
                       ),
-                      Text(translateProvider.textResult)
+                      Text(translateProvider.textResult),
+                      Text(translateProvider.scanResult==""? translateProvider.isNotScanningResult : "")
                     ],
                   ),
                 ),

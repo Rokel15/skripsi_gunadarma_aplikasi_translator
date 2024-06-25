@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
+import 'package:skripsi_aplikasi_translator/providers/download_language_model_provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
 import 'package:skripsi_aplikasi_translator/screens/camera_and_gallery_translated_screen.dart';
 import 'package:skripsi_aplikasi_translator/screens/opening_screen.dart';
@@ -22,10 +23,13 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<DownloadLanguageModelProvider>(
+          create: (context) => DownloadLanguageModelProvider(),
+          // ..checkAndDownloadModel(),
+        ),
+
         ChangeNotifierProvider<TranslateProvider>(
-          create: (context) => TranslateProvider()
-            ..checkAndDownloadModel()
-            // ..initializeCamera(),
+          create: (context) => TranslateProvider(),
         ),
       ],
       child: MaterialApp(

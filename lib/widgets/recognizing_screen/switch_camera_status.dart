@@ -25,13 +25,19 @@ class SwitchCameraStatus extends StatelessWidget {
                 children: [
                   Image.asset(
                     frameIcon,
-                    height: MediaQuery.of(context).size.width*1/6.2,
-                    width: MediaQuery.of(context).size.width*1/6.2,
+                    height: MediaQuery.of(context).orientation == Orientation.portrait?
+                    MediaQuery.of(context).size.width*1/6.8 :
+                    MediaQuery.of(context).size.height*1/6.8,
+                    width: MediaQuery.of(context).orientation == Orientation.portrait?
+                    MediaQuery.of(context).size.width*1/6.8 :
+                    MediaQuery.of(context).size.height*1/6.8
                   ),
 
                   Icon(
                     setCameraStatusIcon,
-                    size: MediaQuery.of(context).size.width*1/6.2,
+                    size: MediaQuery.of(context).orientation == Orientation.portrait?
+                    MediaQuery.of(context).size.width*1/6.8 :
+                    MediaQuery.of(context).size.height*1/6.8
                   ),
                 ]
             ),
