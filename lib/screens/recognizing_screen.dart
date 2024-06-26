@@ -1,19 +1,13 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/download_language_model_provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/camera_view.dart';
-import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_camera.dart';
-import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_image_from_gallery.dart';
-import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_text_by_user.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/other_features.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/recognize_text_sign.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_language_from_live_camera.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/switch_camera_status.dart';
-import '../main.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/translated_text_from_lc.dart';
 import '../providers/translate_provider.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 
 class RecognizingScreen extends StatefulWidget {
   const RecognizingScreen({super.key});
@@ -111,9 +105,9 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                         textStyle: translateProvider.roboto16Bold,
                       ),
 
-                      SelectLanguageFromLiveCamera(
-                        value: translateProvider.selectLanguageForLiveCamera,
-                        items: translateProvider.languages.map((String val){
+                      SelectSourceLanguageFromLiveCamera(
+                        value: translateProvider.selectSourceLanguageForLiveCamera,
+                        items: translateProvider.languagesForLiveCamera.map((String val){
                           return DropdownMenuItem(
                             value: val,
                             child: Row(
@@ -124,7 +118,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                             ),
                           );
                         }).toList(),
-                        onChanged: (String? val){translateProvider.onLanguageChangedForLiveCamera(val);},
+                        onChanged: (String? val){translateProvider.onSourceLanguageChangedForLiveCamera(val);},
                       ),
 
                       SwitchCameraStatus(
@@ -144,7 +138,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                         },
                         onTapCameraIcon: ()async{
                           await translateProvider.imageFromCamera();
-                          translateProvider.imageFromGallery();
+                          translateProvider.recognizeTextAndTranslate(context);
                         },
                         onTapInputTextIcon: () => translateProvider.goToInputTextAndTranslate(context),
                       ),
@@ -155,46 +149,69 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
 
               const SizedBox(height: 30,),
 
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  decoration: const BoxDecoration(
-                    color: Color(0xff31363F), borderRadius: BorderRadius.vertical(top: Radius.circular(25)),),
-                  child: ListView(
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: DropdownButton(
-                          value: translateProvider.selectLanguageForLiveCamera,
-                          items: translateProvider.languages.map((String val) {
-                            return DropdownMenuItem(
-                              value: val,
-                              child: Row(
-                                children: [const Icon(Icons.language), Text(val)],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String? val) => translateProvider.onLanguageChangedForLiveCamera(val),
-                        ),
-                      ),
-                      Text(translateProvider.textResult),
-                      Text(translateProvider.scanResult==""? translateProvider.isNotScanningResult : "")
-                    ],
-                  ),
-                ),
+              TranslatedTextFromLc(
+                value: translateProvider.selectTargetLanguage,
+                items: translateProvider.languages.map((String val){
+                  return DropdownMenuItem(
+                    value: val,
+                    child: Row(
+                      children: [
+                        translateProvider.languageIcon, const Text("  "),
+                        Text(val, style: translateProvider.roboto14SemiBold,),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? value){},
+                text: translateProvider.textResult,
               ),
+
+              // Expanded(
+              //   child: Container(
+              //     width: double.infinity,
+              //     margin: const EdgeInsets.symmetric(horizontal: 20),
+              //     padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              //     decoration: const BoxDecoration(
+              //       color: Color(0xff31363F), borderRadius: BorderRadius.vertical(top: Radius.circular(25)),),
+              //     child: ListView(
+              //       children: [
+              //         Align(
+              //           alignment: Alignment.topRight,
+              //           child: DropdownButton(
+              //             value: translateProvider.selectTargetLanguageForLiveCamera,
+              //             items: translateProvider.languages.map((String val) {
+              //               return DropdownMenuItem(
+              //                 value: val,
+              //                 child: Row(
+              //                   children: [const Icon(Icons.language), Text(val)],
+              //                 ),
+              //               );
+              //             }).toList(),
+              //             onChanged: (String? val) => translateProvider.onTargetLanguageChangedForLiveCamera(val),
+              //           ),
+              //         ),
+              //
+              //         // Text(translateProvider.scanResult!=""? translateProvider.textResult : translateProvider.isNotScanningResult)
+              //         // Text(translateProvider.scanResult == translateProvider.isNotScanningResult?
+              //         // translateProvider.isNotScanningResult :
+              //         // translateProvider.textResult
+              //         // ),
+              //
+              //         Text(translateProvider.textResult),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            shape: const CircleBorder(),
-            backgroundColor: Color(0xff4D4C7D),
-            child: const Icon(Icons.restart_alt, color: Colors.white,),
-            onPressed: (){
-              translateProvider.emptyTextFromLiveCamera();
-            },
-          ),
+          // floatingActionButton: FloatingActionButton(
+          //   shape: const CircleBorder(),
+          //   backgroundColor: Color(0xff4D4C7D),
+          //   child: const Icon(Icons.restart_alt, color: Colors.white,),
+          //   onPressed: (){
+          //     translateProvider.emptyTextFromLiveCamera();
+          //   },
+          // ),
         );
       },
     );

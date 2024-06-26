@@ -23,37 +23,96 @@ class TranslateProvider extends ChangeNotifier{
   TextStyle roboto16SemiBold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600,);
   TextStyle roboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700,);
 
-  Map<String, dynamic> _languages = {
+  // bool isMalayDownloaded = false;
+  // bool isVietnameseDownloaded = false;
+
+  final Map<String, dynamic> _languagesForLiveCamera = {
     "select language": null,
+    "Albanian": TranslateLanguage.albanian,
+    "Croatian": TranslateLanguage.croatian,
+    "Danish": TranslateLanguage.danish,
+    "Dutch": TranslateLanguage.dutch,
     "English": TranslateLanguage.english,
+    "French": TranslateLanguage.french,
+    "German": TranslateLanguage.german,
     "Indonesian": TranslateLanguage.indonesian,
+    "Irish": TranslateLanguage.irish,
+    "Italian": TranslateLanguage.italian,
+    "Malay" : TranslateLanguage.malay,
+    "Norwegian": TranslateLanguage.norwegian,
+    "Polish": TranslateLanguage.polish,
+    "Romanian": TranslateLanguage.romanian,
+    "Swahili" : TranslateLanguage.swahili,
+    "Swedish": TranslateLanguage.swedish,
+    "Turkish": TranslateLanguage.turkish,
+    "Vietnamese" : TranslateLanguage.vietnamese,
+  };
+
+  List<String> get languagesForLiveCamera{
+    return [..._languagesForLiveCamera.keys.toList()];
+  }
+
+  final Map<String, dynamic> _languages = {
+    "select language": null,
+    "Albanian": TranslateLanguage.albanian,
+    "Arabic": TranslateLanguage.arabic,
     "Chinese": TranslateLanguage.chinese,
+    "Croatian": TranslateLanguage.croatian,
+    "Danish": TranslateLanguage.danish,
+    "Dutch": TranslateLanguage.dutch,
+    "English": TranslateLanguage.english,
+    "French": TranslateLanguage.french,
+    "German": TranslateLanguage.german,
+    "Hindi": TranslateLanguage.hindi,
+    "Indonesian": TranslateLanguage.indonesian,
+    "Irish": TranslateLanguage.irish,
+    "Italian": TranslateLanguage.italian,
     "Japanese": TranslateLanguage.japanese,
     "Korean": TranslateLanguage.korean,
-    "Arabic": TranslateLanguage.arabic,
-    "Turkish": TranslateLanguage.turkish,
-    "German": TranslateLanguage.german,
-    "Dutch": TranslateLanguage.dutch,
-    "Hindi": TranslateLanguage.hindi,
+    "Malay" : TranslateLanguage.malay,
+    "Norwegian": TranslateLanguage.norwegian,
+    "Polish": TranslateLanguage.polish,
+    "Romanian": TranslateLanguage.romanian,
     "Russian": TranslateLanguage.russian,
-    "French": TranslateLanguage.french,
+    "Swahili" : TranslateLanguage.swahili,
+    "Swedish": TranslateLanguage.swedish,
+    "Turkish": TranslateLanguage.turkish,
+    "Vietnamese" : TranslateLanguage.vietnamese,
   };
 
   List<String> get languages{
     return [..._languages.keys.toList()];
   }
 
+  String _selectSourceLanguageForLiveCamera = "select language";
+  TranslateLanguage? _sourceLanguageForLiveCamera;
+  String _selectTargetLanguageForLiveCamera = "select language";
+  TranslateLanguage? _targetLanguageForLiveCamera;
   String _selectSourceLanguage = "select language";
   TranslateLanguage? _sourceLanguage;
   String _selectTargetLanguage = "select language";
   TranslateLanguage? _targetLanguage;
-  String _selectLanguageForLiveCamera = "select language";
 
+  String get selectSourceLanguageForLiveCamera => _selectSourceLanguageForLiveCamera;
+  TranslateLanguage? get sourceLanguageForLiveCamera => _sourceLanguageForLiveCamera;
+  String get selectTargetLanguageForLiveCamera => _selectTargetLanguageForLiveCamera;
+  TranslateLanguage? get targetLanguageForLiveCamera => _targetLanguageForLiveCamera;
   String get selectSourceLanguage => _selectSourceLanguage;
   TranslateLanguage? get sourceLanguage => _sourceLanguage;
   String get selectTargetLanguage => _selectTargetLanguage;
   TranslateLanguage? get targetLanguage => _targetLanguage;
-  String get selectLanguageForLiveCamera => _selectLanguageForLiveCamera;
+
+  void onSourceLanguageChangedForLiveCamera(String? language){
+    _selectSourceLanguageForLiveCamera = language!;
+    _sourceLanguageForLiveCamera = _languages[language];
+    notifyListeners();
+  }
+
+  void onTargetLanguageChangedForLiveCamera(String? language){
+    _selectTargetLanguageForLiveCamera = language!;
+    _targetLanguageForLiveCamera = _languages[language];
+    notifyListeners();
+  }
 
   void onSourceLanguageChanged(String? language){
     _selectSourceLanguage = language!;
@@ -64,11 +123,6 @@ class TranslateProvider extends ChangeNotifier{
   void onTargetLanguageChanged(String? language){
     _selectTargetLanguage = language!;
     _targetLanguage = _languages[language];
-    notifyListeners();
-  }
-
-  void onLanguageChangedForLiveCamera(String? language){
-    _selectLanguageForLiveCamera = language!;
     notifyListeners();
   }
 
@@ -138,7 +192,6 @@ class TranslateProvider extends ChangeNotifier{
         if(!isBusy){
           isBusy = true;
         _cameraImage = image;
-        _scanResult = "";
         doTextRecognitionOnLiveCamera();
         notifyListeners();
         };
@@ -206,6 +259,7 @@ class TranslateProvider extends ChangeNotifier{
   doTextRecognitionOnLiveCamera() async {
     var frameImage = getInputImageFromLiveCamera();
     RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
+    _scanResult = "";
 
     for (TextBlock block in recognizedText.blocks){
       final Rect rect = block.boundingBox;
@@ -234,7 +288,8 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   emptyTextFromLiveCamera() {
-    _scanResult = "";
+    // _scanResult = "";
+    _scanResult = isNotScanningResult;
     notifyListeners();
   }
 

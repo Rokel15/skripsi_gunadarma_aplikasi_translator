@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SelectLanguageFromLiveCamera extends StatelessWidget {
+class SelectSourceLanguageFromLiveCamera extends StatelessWidget {
   String value;
   List<DropdownMenuItem<String>> items;
   Function(String val) onChanged;
 
-  SelectLanguageFromLiveCamera({
+  SelectSourceLanguageFromLiveCamera({
     super.key,
     required this.value,
     required this.items,
