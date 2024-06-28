@@ -150,8 +150,12 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                                     bodyAlertText: translateProvider.bodyAlertText,
                                     sourceLabel: translateProvider.sourceLabel,
                                     targetLabel: translateProvider.targetLabel,
-                                    selectSourceLanguage: translateProvider.selectSourceLanguage,
-                                    selectTargetLanguage: translateProvider.selectTargetLanguage,
+                                    selectSourceLanguage: translateProvider.selectSourceLanguage == "select language"?
+                                    translateProvider.notSelectedYet :
+                                    translateProvider.selectSourceLanguage,
+                                    selectTargetLanguage: translateProvider.selectTargetLanguage == "select language"?
+                                    translateProvider.notSelectedYet :
+                                    translateProvider.selectTargetLanguage,
                                     headTextStyle: translateProvider.blackRoboto16Bold,
                                     bodyTextStyle: translateProvider.roboto14SemiBold,
                                   );},
@@ -172,8 +176,12 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                                     bodyAlertText: translateProvider.bodyAlertText,
                                     sourceLabel: translateProvider.sourceLabel,
                                     targetLabel: translateProvider.targetLabel,
-                                    selectSourceLanguage: translateProvider.selectSourceLanguage,
-                                    selectTargetLanguage: translateProvider.selectTargetLanguage,
+                                    selectSourceLanguage: translateProvider.selectSourceLanguage == "select language"?
+                                    translateProvider.notSelectedYet :
+                                    translateProvider.selectSourceLanguage,
+                                    selectTargetLanguage: translateProvider.selectTargetLanguage == "select language"?
+                                    translateProvider.notSelectedYet :
+                                    translateProvider.selectTargetLanguage,
                                     headTextStyle: translateProvider.blackRoboto16Bold,
                                     bodyTextStyle: translateProvider.roboto14SemiBold,
                                   );},

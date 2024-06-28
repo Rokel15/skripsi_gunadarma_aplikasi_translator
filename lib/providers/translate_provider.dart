@@ -452,6 +452,7 @@ class TranslateProvider extends ChangeNotifier{
   String bodyAlertText = "Please fill source language and target language first!";
   String sourceLabel = "Source Language";
   String targetLabel = "Target Language";
+  String notSelectedYet = "not selected yet";
 
   //TODO CameraAndGalleryTranslatedScreen
   Color textFromImageColor = const Color(0xff4C4C6D);
