@@ -148,7 +148,6 @@ class TranslateProvider extends ChangeNotifier{
 
   //TODO RecognizingScreen
   String _recognizingTextSign = "Recognizing...";
-  // late CameraController cameraController;
   CameraController cameraController = CameraController(cameras[0], ResolutionPreset.high);
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   Color cameraCoverColor = const Color(0xff686D76);
@@ -157,47 +156,57 @@ class TranslateProvider extends ChangeNotifier{
   String openCameraInstruction = "Open Camera!";
   CameraImage? _cameraImage;
   bool isBusy = false;
+  String _getText = "";
   String _scanResult = "";
   String _textResult = "";
+  String _translateTextResult = "";
   String _isNotScanningResult = "no text recognized";
 
   bool get cameraStatus => _cameraStatus;
   CameraImage get cameraImage => _cameraImage!;
+  String get getText => _getText;
   String get scanResult => _scanResult;
   String get textResult => _textResult;
+  String get translateTextResult => _translateTextResult;
   String get isNotScanningResult => _isNotScanningResult;
 
-  setCameraStatus()async{
+  Future setCameraStatus()async{
     if(cameraStatus==false){
       _cameraStatus = true;
       await initializeCamera();
       notifyListeners();
     } else{
       _cameraStatus = false;
-      cameraController.stopImageStream();
-      emptyTextFromLiveCamera();
+      if (cameraController.value.isStreamingImages) {
+        await cameraController.stopImageStream();
+        notifyListeners();
+      }
+      if (cameraController.value.isRecordingVideo) {
+        await cameraController.stopVideoRecording();
+        notifyListeners();
+      }
+      // await cameraController.stopImageStream();
+      // await cameraController.stopVideoRecording();
+
+      cameraController.dispose();
+      _scanResult = isNotScanningResult;
       notifyListeners();
     }
     notifyListeners();
   }
 
-  initializeCamera() async{
-    // cameraController = CameraController(cameras[0], ResolutionPreset.high);
-    await cameraController.initialize().then((_) {
-      // if (!mounted) {
-      //   return;
-      // }
-      // setState(() {});
+  Future initializeCamera() async {
+    cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    try {
+      await cameraController.initialize();
       cameraController.startImageStream((image) {
-        if(!isBusy){
+        if (!isBusy) {
           isBusy = true;
-        _cameraImage = image;
-        doTextRecognitionOnLiveCamera();
-        notifyListeners();
-        };
+          _cameraImage = image;
+          doTextRecognitionOnLiveCamera();
+        }
       });
-      notifyListeners();
-    }).catchError((Object e) {
+    } catch (e) {
       if (e is CameraException) {
         switch (e.code) {
           case 'CameraAccessDenied':
@@ -207,12 +216,42 @@ class TranslateProvider extends ChangeNotifier{
           // Handle other errors here.
             break;
         }
-        // notifyListeners();
       }
-      // notifyListeners();
-    });
-    // notifyListeners();
+    }
+    notifyListeners();
   }
+
+  // initializeCamera() async{
+  //   await cameraController.initialize().then((_) {
+  //     // if (!mounted) {
+  //     //   return;
+  //     // }
+  //     // setState(() {});
+  //     cameraController.startImageStream((image) {
+  //       if(!isBusy){
+  //         isBusy = true;
+  //       _cameraImage = image;
+  //       doTextRecognitionOnLiveCamera();
+  //       notifyListeners();
+  //       };
+  //     });
+  //     notifyListeners();
+  //   }).catchError((Object e) {
+  //     if (e is CameraException) {
+  //       switch (e.code) {
+  //         case 'CameraAccessDenied':
+  //         // Handle access errors here.
+  //           break;
+  //         default:
+  //         // Handle other errors here.
+  //           break;
+  //       }
+  //       notifyListeners();
+  //     }
+  //     notifyListeners();
+  //   });
+  //   notifyListeners();
+  // }
 
   @override
   dispose(){
@@ -261,6 +300,26 @@ class TranslateProvider extends ChangeNotifier{
     RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
     _scanResult = "";
 
+  //   for (TextBlock block in recognizedText.blocks){
+  //     final Rect rect = block.boundingBox;
+  //     final List cornerPoints = block.cornerPoints;
+  //     final String text = block.text;
+  //     final List<String> languages = block.recognizedLanguages;
+  //
+  //     for (TextLine line in block.lines) {
+  //       // Same getters as TextBlock
+  //       for (TextElement element in line.elements) {
+  //         _scanResult += element.text+" ";
+  //         // Same getters as TextBlock
+  //         notifyListeners();
+  //       }
+  //       _scanResult += "\n";
+  //       notifyListeners();
+  //     }
+  //     _scanResult += "\n";
+  //     notifyListeners();
+  //   }
+
     for (TextBlock block in recognizedText.blocks){
       final Rect rect = block.boundingBox;
       final List cornerPoints = block.cornerPoints;
@@ -281,17 +340,28 @@ class TranslateProvider extends ChangeNotifier{
       notifyListeners();
     }
 
-    // _scanResult = recognizedText;
     isBusy = false;
-    _textResult = scanResult;
+    translateTextFromLiveCamera(_scanResult);
     notifyListeners();
   }
 
-  emptyTextFromLiveCamera() {
-    // _scanResult = "";
-    _scanResult = isNotScanningResult;
+  translateTextFromLiveCamera(String text)async{
+    if (sourceLanguageForLiveCamera != null && targetLanguageForLiveCamera != null){
+      final String response = await OnDeviceTranslator(
+        sourceLanguage: sourceLanguageForLiveCamera!,
+        targetLanguage: targetLanguageForLiveCamera!,
+      ).translateText(text);
+      _translateTextResult = response;
+      notifyListeners();
+    }
     notifyListeners();
   }
+
+  // emptyTextFromLiveCamera() {
+    // _scanResult = "";
+  //   _scanResult = isNotScanningResult;
+  //   notifyListeners();
+  // }
 
   // Widget textResultFromLiveCamera() {
   //   if (_scanResult == null ||
@@ -314,19 +384,6 @@ class TranslateProvider extends ChangeNotifier{
   ImagePicker imagePicker = ImagePicker();
   String _result = "";
   String _selecChartLanguage = "select language";
-  // final modelManager = OnDeviceTranslatorModelManager();
-  // bool isIndonesianDownloaded = false;
-  // bool isEnglishDownloaded = false;
-  // bool isChineseDownloaded = false;
-  // bool isJapaneseDownloaded = false;
-  // bool isKoreanDownloaded = false;
-  // bool isArabicDownloaded = false;
-  // bool isTurkishDownloaded = false;
-  // bool isGermanDownloaded = false;
-  // bool isDutchDownloaded = false;
-  // bool isHindiDownloaded = false;
-  // bool isRussianDownloaded = false;
-  // bool isFrenchDownloaded = false;
   dynamic onDeviceTranslator;
   final String _headerRecognizedText = "Recognized Text";
   final String _headerTranslatedText = "Translated Text";
@@ -387,108 +444,6 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  // Future checkAndDownloadModel() async{
-  //   try{
-  //     isIndonesianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.indonesian.bcpCode);
-  //     isEnglishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.english.bcpCode);
-  //     isChineseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.chinese.bcpCode);
-  //     isJapaneseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.japanese.bcpCode);
-  //     isKoreanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.korean.bcpCode);
-  //     isArabicDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.arabic.bcpCode);
-  //     isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
-  //     isGermanDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.german.bcpCode);
-  //     isDutchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.dutch.bcpCode);
-  //     isHindiDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.hindi.bcpCode);
-  //     isRussianDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.russian.bcpCode);
-  //     isFrenchDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.french.bcpCode);
-  //
-  //     if(!isIndonesianDownloaded){
-  //       isIndonesianDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.indonesian.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isEnglishDownloaded){
-  //       isEnglishDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.english.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isChineseDownloaded){
-  //       isChineseDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isJapaneseDownloaded){
-  //       isJapaneseDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.japanese.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isKoreanDownloaded){
-  //       isKoreanDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.korean.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isArabicDownloaded){
-  //       isArabicDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isTurkishDownloaded){
-  //       isTurkishDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.turkish.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isGermanDownloaded){
-  //       isGermanDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.german.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isDutchDownloaded){
-  //       isDutchDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isHindiDownloaded){
-  //       isHindiDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.hindi.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isRussianDownloaded){
-  //       isRussianDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.russian.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //
-  //     if(!isFrenchDownloaded){
-  //       isFrenchDownloaded = await modelManager.downloadModel(
-  //         TranslateLanguage.french.bcpCode, isWifiRequired: false,
-  //       );
-  //       notifyListeners();
-  //     }
-  //   }catch(e){
-  //     rethrow;
-  //   }
-  //   notifyListeners();
-  // }
 
   Future translateText(String text)async{
     // if(isEnglishDownloaded && isIndonesianDownloaded){

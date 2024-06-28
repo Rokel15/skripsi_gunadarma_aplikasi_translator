@@ -51,10 +51,7 @@ class TranslateInputTextScreen extends StatelessWidget {
                   selectLanguageValue: translateProvider.selectTargetLanguage,
                   selectLanguageItems: translateProvider.languages,
                   onLanguageChanged: (String val){translateProvider.onTargetLanguageChanged(val);},
-                  tapSementara: () async{
-                    await translateProvider.translateInputText();
-                    print(translateProvider.textTranslateInput);
-                    },
+                  tapSementara: () async{await translateProvider.translateInputText();},
                 ),
               ],
             ),

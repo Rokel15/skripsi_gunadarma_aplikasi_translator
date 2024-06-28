@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/download_language_model_provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/camera_view.dart';
@@ -50,168 +51,128 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
   Widget build(BuildContext context) {
     return Consumer<TranslateProvider>(
       builder: (context, translateProvider, child) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(0),
-            child: AppBar(),
-          ),
-          body: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(40),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 3.4 / 5,
-                  child: Stack(
-                    children: [
-                      CameraView(
-                        cameraStatus: translateProvider.cameraStatus,
-                        label: translateProvider.openCameraInstruction,
-                        textStyle: translateProvider.roboto16Bold,
-                        containerColor: translateProvider.cameraCoverColor,
-                        cameraController: translateProvider.cameraController,
-                      ),
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPoop){SystemNavigator.pop();},
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(0),
+              child: AppBar(),
+            ),
+            body: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 3.4 / 5,
+                    child: Stack(
+                      children: [
+                        CameraView(
+                          cameraStatus: translateProvider.cameraStatus,
+                          label: translateProvider.openCameraInstruction,
+                          textStyle: translateProvider.roboto16Bold,
+                          containerColor: translateProvider.cameraCoverColor,
+                          cameraController: translateProvider.cameraController,
+                        ),
 
-                      // translateProvider.textResultFromLiveCamera(),
+                        // translateProvider.textResultFromLiveCamera(),
 
-                      // Positioned(
-                      //   top: 0.0,
-                      //   left: 0.0,
-                      //   child:
-                      //   translateProvider.textResultFromLiveCamera(),
-                      // ),
+                        // Positioned(
+                        //   top: 0.0,
+                        //   left: 0.0,
+                        //   child:
+                        //   translateProvider.textResultFromLiveCamera(),
+                        // ),
 
-                    // Widget textResultFromLiveCamera() {
-                    //   return Container();
-              // if (_scanResult == null ||
-              // // cameraController == null ||
-              // !cameraController.value.isInitialized) {
-              // notifyListeners();
-              // return const Text('');
-              // }
-              //
-              // final Size imageSize = Size(
-              // cameraController.value.previewSize!.height,
-              // cameraController.value.previewSize!.width,
-              // );
-              // CustomPainter painter = TextRecognitionPainter(imageSize, _scanResult);
-              // notifyListeners();
-              // return CustomPaint(painter: painter,);
-              // }
+                      // Widget textResultFromLiveCamera() {
+                      //   return Container();
+                // if (_scanResult == null ||
+                // // cameraController == null ||
+                // !cameraController.value.isInitialized) {
+                // notifyListeners();
+                // return const Text('');
+                // }
+                //
+                // final Size imageSize = Size(
+                // cameraController.value.previewSize!.height,
+                // cameraController.value.previewSize!.width,
+                // );
+                // CustomPainter painter = TextRecognitionPainter(imageSize, _scanResult);
+                // notifyListeners();
+                // return CustomPaint(painter: painter,);
+                // }
 
-                      RecognizeTextSign(
-                        cameraStatus: translateProvider.cameraStatus,
-                        recognizingTextSign: translateProvider.recognizingTextSign,
-                        textStyle: translateProvider.roboto16Bold,
-                      ),
+                        RecognizeTextSign(
+                          cameraStatus: translateProvider.cameraStatus,
+                          recognizingTextSign: translateProvider.recognizingTextSign,
+                          textStyle: translateProvider.roboto16Bold,
+                        ),
 
-                      SelectSourceLanguageFromLiveCamera(
-                        value: translateProvider.selectSourceLanguageForLiveCamera,
-                        items: translateProvider.languagesForLiveCamera.map((String val){
-                          return DropdownMenuItem(
-                            value: val,
-                            child: Row(
-                              children: [
-                                translateProvider.languageIcon, const Text("  "),
-                                Text(val, style: translateProvider.roboto14SemiBold,),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? val){translateProvider.onSourceLanguageChangedForLiveCamera(val);},
-                      ),
+                        SelectSourceLanguageFromLiveCamera(
+                          value: translateProvider.selectSourceLanguageForLiveCamera,
+                          items: translateProvider.languagesForLiveCamera.map((String val){
+                            return DropdownMenuItem(
+                              value: val,
+                              child: Row(
+                                children: [
+                                  translateProvider.languageIcon, const Text("  "),
+                                  Text(val, style: translateProvider.roboto14SemiBold,),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? val){translateProvider.onSourceLanguageChangedForLiveCamera(val);},
+                        ),
 
-                      SwitchCameraStatus(
-                        frameIcon: translateProvider.frameIcon,
-                        setCameraStatusIcon: translateProvider.setCameraStatusIcon,
-                        setCameraStatus: (){translateProvider.setCameraStatus();}
-                      ),
+                        SwitchCameraStatus(
+                          frameIcon: translateProvider.frameIcon,
+                          setCameraStatusIcon: translateProvider.setCameraStatusIcon,
+                          setCameraStatus: (){translateProvider.setCameraStatus();}
+                        ),
 
-                      OtherFeatures(
-                        galleryIcon: translateProvider.galleryIcon,
-                        cameraIcon: translateProvider.cameraIcon,
-                        inputTextIcon: translateProvider.inputTextIcon,
-                        // otherFeatureIconSize: translateProvider.otherFeatureIconSize,
-                        onTapGalleryIcon: () async{
-                          await translateProvider.imageFromGallery();
-                          translateProvider.recognizeTextAndTranslate(context);
-                        },
-                        onTapCameraIcon: ()async{
-                          await translateProvider.imageFromCamera();
-                          translateProvider.recognizeTextAndTranslate(context);
-                        },
-                        onTapInputTextIcon: () => translateProvider.goToInputTextAndTranslate(context),
-                      ),
-                    ]
+                        OtherFeatures(
+                          galleryIcon: translateProvider.galleryIcon,
+                          cameraIcon: translateProvider.cameraIcon,
+                          inputTextIcon: translateProvider.inputTextIcon,
+                          // otherFeatureIconSize: translateProvider.otherFeatureIconSize,
+                          onTapGalleryIcon: () async{
+                            await translateProvider.imageFromGallery();
+                            translateProvider.recognizeTextAndTranslate(context);
+                          },
+                          onTapCameraIcon: ()async{
+                            await translateProvider.imageFromCamera();
+                            translateProvider.recognizeTextAndTranslate(context);
+                          },
+                          onTapInputTextIcon: () => translateProvider.goToInputTextAndTranslate(context),
+                        ),
+                      ]
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 30,),
+                const SizedBox(height: 30,),
 
-              TranslatedTextFromLc(
-                value: translateProvider.selectTargetLanguage,
-                items: translateProvider.languages.map((String val){
-                  return DropdownMenuItem(
-                    value: val,
-                    child: Row(
-                      children: [
-                        translateProvider.languageIcon, const Text("  "),
-                        Text(val, style: translateProvider.roboto14SemiBold,),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? value){},
-                text: translateProvider.textResult,
-              ),
-
-              // Expanded(
-              //   child: Container(
-              //     width: double.infinity,
-              //     margin: const EdgeInsets.symmetric(horizontal: 20),
-              //     padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-              //     decoration: const BoxDecoration(
-              //       color: Color(0xff31363F), borderRadius: BorderRadius.vertical(top: Radius.circular(25)),),
-              //     child: ListView(
-              //       children: [
-              //         Align(
-              //           alignment: Alignment.topRight,
-              //           child: DropdownButton(
-              //             value: translateProvider.selectTargetLanguageForLiveCamera,
-              //             items: translateProvider.languages.map((String val) {
-              //               return DropdownMenuItem(
-              //                 value: val,
-              //                 child: Row(
-              //                   children: [const Icon(Icons.language), Text(val)],
-              //                 ),
-              //               );
-              //             }).toList(),
-              //             onChanged: (String? val) => translateProvider.onTargetLanguageChangedForLiveCamera(val),
-              //           ),
-              //         ),
-              //
-              //         // Text(translateProvider.scanResult!=""? translateProvider.textResult : translateProvider.isNotScanningResult)
-              //         // Text(translateProvider.scanResult == translateProvider.isNotScanningResult?
-              //         // translateProvider.isNotScanningResult :
-              //         // translateProvider.textResult
-              //         // ),
-              //
-              //         Text(translateProvider.textResult),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-            ],
+                TranslatedTextFromLc(
+                  value: translateProvider.selectTargetLanguageForLiveCamera,
+                  items: translateProvider.languages.map((String val){
+                    return DropdownMenuItem(
+                      value: val,
+                      child: Row(
+                        children: [
+                          translateProvider.languageIcon, const Text("  "),
+                          Text(val, style: translateProvider.roboto14SemiBold,),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? val){translateProvider.onTargetLanguageChangedForLiveCamera(val);},
+                  text: translateProvider.translateTextResult,
+                  textStyle: translateProvider.roboto14SemiBold,
+                ),
+              ],
+            ),
           ),
-          // floatingActionButton: FloatingActionButton(
-          //   shape: const CircleBorder(),
-          //   backgroundColor: Color(0xff4D4C7D),
-          //   child: const Icon(Icons.restart_alt, color: Colors.white,),
-          //   onPressed: (){
-          //     translateProvider.emptyTextFromLiveCamera();
-          //   },
-          // ),
         );
       },
     );

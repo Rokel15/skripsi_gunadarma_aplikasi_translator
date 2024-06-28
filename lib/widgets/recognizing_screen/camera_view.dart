@@ -26,6 +26,7 @@ class CameraView extends StatelessWidget {
         decoration: BoxDecoration(color: containerColor,),
         child: Center(child: Text(label, style: textStyle,),),
       ) :
+      // CameraPreview(cameraController,) :
       CameraPreview(cameraController,),
     );
   }

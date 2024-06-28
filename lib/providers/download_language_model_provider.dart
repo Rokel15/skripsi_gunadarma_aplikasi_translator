@@ -60,45 +60,45 @@ class DownloadLanguageModelProvider extends ChangeNotifier{
       isTurkishDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.turkish.bcpCode);
       isVietnameseDownloaded = await modelManager.isModelDownloaded(TranslateLanguage.polish.bcpCode);
 
-      if(!isAlbanianDownloaded){
-        isAlbanianDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.albanian.bcpCode, isWifiRequired: false,);
-        notifyListeners();
-      }
+      // if(!isAlbanianDownloaded){
+      //   isAlbanianDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.albanian.bcpCode, isWifiRequired: false,);
+      //   notifyListeners();
+      // }
 
-      if(!isArabicDownloaded){
-        isArabicDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
-        notifyListeners();
-      }
-
-      if(!isChineseDownloaded){
-        isChineseDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isCroatianDownloaded){
-        isCroatianDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.croatian.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isDanishDownloaded){
-        isDanishDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.danish.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
-
-      if(!isDutchDownloaded){
-        isDutchDownloaded = await modelManager.downloadModel(
-          TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
-        );
-        notifyListeners();
-      }
+      // if(!isArabicDownloaded){
+      //   isArabicDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.arabic.bcpCode, isWifiRequired: false,);
+      //   notifyListeners();
+      // }
+      //
+      // if(!isChineseDownloaded){
+      //   isChineseDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.chinese.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isCroatianDownloaded){
+      //   isCroatianDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.croatian.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isDanishDownloaded){
+      //   isDanishDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.danish.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
+      //
+      // if(!isDutchDownloaded){
+      //   isDutchDownloaded = await modelManager.downloadModel(
+      //     TranslateLanguage.dutch.bcpCode, isWifiRequired: false,
+      //   );
+      //   notifyListeners();
+      // }
 
       if(!isEnglishDownloaded){
         isEnglishDownloaded = await modelManager.downloadModel(
