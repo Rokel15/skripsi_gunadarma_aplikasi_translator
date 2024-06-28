@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/download_language_model_provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/camera_view.dart';
+import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/input_alert.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/other_features.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/recognize_text_sign.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_language_from_live_camera.dart';
@@ -110,8 +111,8 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                         ),
 
                         SelectSourceLanguageFromLiveCamera(
-                          value: translateProvider.selectSourceLanguageForLiveCamera,
-                          items: translateProvider.languagesForLiveCamera.map((String val){
+                          value: translateProvider.selectSourceLanguage,
+                          items: translateProvider.languagesLatinText.map((String val){
                             return DropdownMenuItem(
                               value: val,
                               child: Row(
@@ -122,7 +123,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                               ),
                             );
                           }).toList(),
-                          onChanged: (String? val){translateProvider.onSourceLanguageChangedForLiveCamera(val);},
+                          onChanged: (String? val){translateProvider.onSourceLanguageChanged(val);},
                         ),
 
                         SwitchCameraStatus(
@@ -135,14 +136,49 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                           galleryIcon: translateProvider.galleryIcon,
                           cameraIcon: translateProvider.cameraIcon,
                           inputTextIcon: translateProvider.inputTextIcon,
-                          // otherFeatureIconSize: translateProvider.otherFeatureIconSize,
                           onTapGalleryIcon: () async{
-                            await translateProvider.imageFromGallery();
-                            translateProvider.recognizeTextAndTranslate(context);
+                            if(translateProvider.selectSourceLanguage != "select language" &&
+                                translateProvider.selectTargetLanguage != "select language"){
+                              await translateProvider.imageFromGallery();
+                              translateProvider.recognizeTextAndTranslate(context);
+                            } else{
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return InputAlertDialog(
+                                    headAlertText: translateProvider.headAlertText,
+                                    bodyAlertText: translateProvider.bodyAlertText,
+                                    sourceLabel: translateProvider.sourceLabel,
+                                    targetLabel: translateProvider.targetLabel,
+                                    selectSourceLanguage: translateProvider.selectSourceLanguage,
+                                    selectTargetLanguage: translateProvider.selectTargetLanguage,
+                                    headTextStyle: translateProvider.blackRoboto16Bold,
+                                    bodyTextStyle: translateProvider.roboto14SemiBold,
+                                  );},
+                              );
+                            }
                           },
                           onTapCameraIcon: ()async{
-                            await translateProvider.imageFromCamera();
-                            translateProvider.recognizeTextAndTranslate(context);
+                            if(translateProvider.selectSourceLanguage != "select language" &&
+                                translateProvider.selectTargetLanguage != "select language"){
+                              await translateProvider.imageFromGallery();
+                              translateProvider.recognizeTextAndTranslate(context);
+                            } else{
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return InputAlertDialog(
+                                    headAlertText: translateProvider.headAlertText,
+                                    bodyAlertText: translateProvider.bodyAlertText,
+                                    sourceLabel: translateProvider.sourceLabel,
+                                    targetLabel: translateProvider.targetLabel,
+                                    selectSourceLanguage: translateProvider.selectSourceLanguage,
+                                    selectTargetLanguage: translateProvider.selectTargetLanguage,
+                                    headTextStyle: translateProvider.blackRoboto16Bold,
+                                    bodyTextStyle: translateProvider.roboto14SemiBold,
+                                  );},
+                              );
+                            }
                           },
                           onTapInputTextIcon: () => translateProvider.goToInputTextAndTranslate(context),
                         ),
@@ -154,7 +190,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                 const SizedBox(height: 30,),
 
                 TranslatedTextFromLc(
-                  value: translateProvider.selectTargetLanguageForLiveCamera,
+                  value: translateProvider.selectTargetLanguage,
                   items: translateProvider.languages.map((String val){
                     return DropdownMenuItem(
                       value: val,
@@ -166,7 +202,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                       ),
                     );
                   }).toList(),
-                  onChanged: (String? val){translateProvider.onTargetLanguageChangedForLiveCamera(val);},
+                  onChanged: (String? val){translateProvider.onTargetLanguageChanged(val);},
                   text: translateProvider.translateTextResult,
                   textStyle: translateProvider.roboto14SemiBold,
                 ),

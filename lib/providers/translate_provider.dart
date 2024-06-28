@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
@@ -23,10 +24,10 @@ class TranslateProvider extends ChangeNotifier{
   TextStyle roboto16SemiBold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600,);
   TextStyle roboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700,);
 
-  // bool isMalayDownloaded = false;
-  // bool isVietnameseDownloaded = false;
+  TextStyle blackRoboto16SemiBold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black);
+  TextStyle blackRoboto16Bold = GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black);
 
-  final Map<String, dynamic> _languagesForLiveCamera = {
+  final Map<String, dynamic> _languagesLatinText = {
     "select language": null,
     "Albanian": TranslateLanguage.albanian,
     "Croatian": TranslateLanguage.croatian,
@@ -48,8 +49,8 @@ class TranslateProvider extends ChangeNotifier{
     "Vietnamese" : TranslateLanguage.vietnamese,
   };
 
-  List<String> get languagesForLiveCamera{
-    return [..._languagesForLiveCamera.keys.toList()];
+  List<String> get languagesLatinText{
+    return [..._languagesLatinText.keys.toList()];
   }
 
   final Map<String, dynamic> _languages = {
@@ -84,35 +85,35 @@ class TranslateProvider extends ChangeNotifier{
     return [..._languages.keys.toList()];
   }
 
-  String _selectSourceLanguageForLiveCamera = "select language";
-  TranslateLanguage? _sourceLanguageForLiveCamera;
-  String _selectTargetLanguageForLiveCamera = "select language";
-  TranslateLanguage? _targetLanguageForLiveCamera;
+  // String _selectSourceLanguageForLiveCamera = "select language";
+  // TranslateLanguage? _sourceLanguageForLiveCamera;
+  // String _selectTargetLanguageForLiveCamera = "select language";
+  // TranslateLanguage? _targetLanguageForLiveCamera;
   String _selectSourceLanguage = "select language";
   TranslateLanguage? _sourceLanguage;
   String _selectTargetLanguage = "select language";
   TranslateLanguage? _targetLanguage;
 
-  String get selectSourceLanguageForLiveCamera => _selectSourceLanguageForLiveCamera;
-  TranslateLanguage? get sourceLanguageForLiveCamera => _sourceLanguageForLiveCamera;
-  String get selectTargetLanguageForLiveCamera => _selectTargetLanguageForLiveCamera;
-  TranslateLanguage? get targetLanguageForLiveCamera => _targetLanguageForLiveCamera;
+  // String get selectSourceLanguageForLiveCamera => _selectSourceLanguageForLiveCamera;
+  // TranslateLanguage? get sourceLanguageForLiveCamera => _sourceLanguageForLiveCamera;
+  // String get selectTargetLanguageForLiveCamera => _selectTargetLanguageForLiveCamera;
+  // TranslateLanguage? get targetLanguageForLiveCamera => _targetLanguageForLiveCamera;
   String get selectSourceLanguage => _selectSourceLanguage;
   TranslateLanguage? get sourceLanguage => _sourceLanguage;
   String get selectTargetLanguage => _selectTargetLanguage;
   TranslateLanguage? get targetLanguage => _targetLanguage;
 
-  void onSourceLanguageChangedForLiveCamera(String? language){
-    _selectSourceLanguageForLiveCamera = language!;
-    _sourceLanguageForLiveCamera = _languages[language];
-    notifyListeners();
-  }
-
-  void onTargetLanguageChangedForLiveCamera(String? language){
-    _selectTargetLanguageForLiveCamera = language!;
-    _targetLanguageForLiveCamera = _languages[language];
-    notifyListeners();
-  }
+  // void onSourceLanguageChangedForLiveCamera(String? language){
+  //   _selectSourceLanguageForLiveCamera = language!;
+  //   _sourceLanguageForLiveCamera = _languages[language];
+  //   notifyListeners();
+  // }
+  //
+  // void onTargetLanguageChangedForLiveCamera(String? language){
+  //   _selectTargetLanguageForLiveCamera = language!;
+  //   _targetLanguageForLiveCamera = _languages[language];
+  //   notifyListeners();
+  // }
 
   void onSourceLanguageChanged(String? language){
     _selectSourceLanguage = language!;
@@ -300,26 +301,6 @@ class TranslateProvider extends ChangeNotifier{
     RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
     _scanResult = "";
 
-  //   for (TextBlock block in recognizedText.blocks){
-  //     final Rect rect = block.boundingBox;
-  //     final List cornerPoints = block.cornerPoints;
-  //     final String text = block.text;
-  //     final List<String> languages = block.recognizedLanguages;
-  //
-  //     for (TextLine line in block.lines) {
-  //       // Same getters as TextBlock
-  //       for (TextElement element in line.elements) {
-  //         _scanResult += element.text+" ";
-  //         // Same getters as TextBlock
-  //         notifyListeners();
-  //       }
-  //       _scanResult += "\n";
-  //       notifyListeners();
-  //     }
-  //     _scanResult += "\n";
-  //     notifyListeners();
-  //   }
-
     for (TextBlock block in recognizedText.blocks){
       final Rect rect = block.boundingBox;
       final List cornerPoints = block.cornerPoints;
@@ -346,10 +327,10 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   translateTextFromLiveCamera(String text)async{
-    if (sourceLanguageForLiveCamera != null && targetLanguageForLiveCamera != null){
+    if (sourceLanguage != null && targetLanguage != null){
       final String response = await OnDeviceTranslator(
-        sourceLanguage: sourceLanguageForLiveCamera!,
-        targetLanguage: targetLanguageForLiveCamera!,
+        sourceLanguage: sourceLanguage!,
+        targetLanguage: targetLanguage!,
       ).translateText(text);
       _translateTextResult = response;
       notifyListeners();
@@ -465,6 +446,12 @@ class TranslateProvider extends ChangeNotifier{
     Navigator.pushNamed(context, "/translate input text screen");
     notifyListeners();
   }
+
+  //TODO ShowDialog
+  String headAlertText = "Attention";
+  String bodyAlertText = "Please fill source language and target language first!";
+  String sourceLabel = "Source Language";
+  String targetLabel = "Target Language";
 
   //TODO CameraAndGalleryTranslatedScreen
   Color textFromImageColor = const Color(0xff4C4C6D);
