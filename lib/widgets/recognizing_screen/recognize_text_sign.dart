@@ -20,7 +20,7 @@ class RecognizeTextSign extends StatelessWidget {
       child: Container(
         margin:  const EdgeInsets.only(top: 20, left: 20),
         child: cameraStatus==false?
-        Container() :
+        Text(recognizingTextSign, style: textStyle) :
         AnimatedTextKit(
           repeatForever: true,
           animatedTexts: [FadeAnimatedText(recognizingTextSign, textStyle: textStyle)],

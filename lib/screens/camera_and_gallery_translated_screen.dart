@@ -4,6 +4,8 @@ import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
 import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_recognized.dart';
 import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_translated.dart';
 
+import '../widgets/simple_text.dart';
+
 class CameraAndGalleryTranslatedScreen extends StatefulWidget {
 
   const CameraAndGalleryTranslatedScreen({super.key,});
@@ -27,6 +29,15 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
             ),
             body: ListView(
               children: [
+                const SizedBox(height: 14,),
+
+                SimpleText(
+                  simpleText: translateProvider.simpleText,
+                  textStyle: translateProvider.roboto16Bold,
+                ),
+
+                const SizedBox(height: 14,),
+
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height*4.8/10,

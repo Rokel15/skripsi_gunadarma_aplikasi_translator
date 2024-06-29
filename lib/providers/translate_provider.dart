@@ -362,8 +362,8 @@ class TranslateProvider extends ChangeNotifier{
   dynamic onDeviceTranslator;
   final String _headerRecognizedText = "Recognized Text";
   final String _headerTranslatedText = "Translated Text";
-  String textIsRecognized = "";
-  String textIsTranslated = "";
+  String _textIsRecognized = "";
+  String _textIsTranslated = "";
 
   Icon get languageIcon => const Icon(Icons.public);
   String get frameIcon => _frameIcon;
@@ -376,6 +376,8 @@ class TranslateProvider extends ChangeNotifier{
   String get recognizingTextSign => _recognizingTextSign;
   String get result => _result;
   String get selectCharLanguage => _selecChartLanguage;
+  String get textIsRecognized => _textIsRecognized;
+  String get textIsTranslated => _textIsTranslated;
 
   imageFromGallery() async{
     XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -415,17 +417,20 @@ class TranslateProvider extends ChangeNotifier{
       notifyListeners();
     }
 
-    textIsRecognized = result;
+    _textIsRecognized = result;
     notifyListeners();
   }
 
 
   Future translateText(String text)async{
-    // if(isEnglishDownloaded && isIndonesianDownloaded){
-    //   final String response = await OnDeviceTranslator(sourceLanguage: TranslateLanguage.english, targetLanguage: TranslateLanguage.indonesian).translateText(text);
-    //   textIsTranslated = response;
-    //   notifyListeners();
-    // }
+    if(sourceLanguage != null && targetLanguage != null){
+      final String response = await OnDeviceTranslator(
+        sourceLanguage: sourceLanguage!,
+        targetLanguage: targetLanguage!,
+      ).translateText(text);
+      _textIsTranslated = response;
+      notifyListeners();
+    }
     notifyListeners();
   }
 
@@ -468,8 +473,8 @@ class TranslateProvider extends ChangeNotifier{
 
   Future emptyImageData() async{
     image = null;
-    textIsRecognized = "";
-    textIsTranslated  ="";
+    _textIsRecognized = "";
+    _textIsTranslated  ="";
     _result = "";
     notifyListeners();
   }

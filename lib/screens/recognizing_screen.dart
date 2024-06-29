@@ -10,6 +10,7 @@ import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/select_la
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/switch_camera_status.dart';
 import 'package:skripsi_aplikasi_translator/widgets/recognizing_screen/translated_text_from_lc.dart';
 import '../providers/translate_provider.dart';
+import '../widgets/simple_text.dart';
 
 class RecognizingScreen extends StatefulWidget {
   const RecognizingScreen({super.key});
@@ -62,6 +63,15 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
             ),
             body: Column(
               children: [
+                const SizedBox(height: 14,),
+
+                SimpleText(
+                  simpleText: translateProvider.simpleText,
+                  textStyle: translateProvider.roboto16Bold,
+                ),
+
+                const SizedBox(height: 14,),
+
                 ClipRRect(
                   borderRadius: BorderRadius.circular(40),
                   child: SizedBox(
@@ -165,7 +175,7 @@ class _RecognizingScreenState extends State<RecognizingScreen> {
                           onTapCameraIcon: ()async{
                             if(translateProvider.selectSourceLanguage != "select language" &&
                                 translateProvider.selectTargetLanguage != "select language"){
-                              await translateProvider.imageFromGallery();
+                              await translateProvider.imageFromCamera();
                               translateProvider.recognizeTextAndTranslate(context);
                             } else{
                               showDialog(
