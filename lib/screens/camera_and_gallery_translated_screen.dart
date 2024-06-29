@@ -6,9 +6,7 @@ import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translate
 
 class CameraAndGalleryTranslatedScreen extends StatefulWidget {
 
-  CameraAndGalleryTranslatedScreen({
-    super.key,
-  });
+  const CameraAndGalleryTranslatedScreen({super.key,});
 
   @override
   State<CameraAndGalleryTranslatedScreen> createState() => _CameraAndGalleryTranslatedScreenState();

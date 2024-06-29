@@ -127,6 +127,12 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  setSelectDefault() async{
+    _selectSourceLanguage = "select language";
+    _selectTargetLanguage = "select language";
+    notifyListeners();
+  }
+
   List<String> _looks = ["look 1", "look 2"];
   List<String> get looks => [..._looks];
 
@@ -141,6 +147,7 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   Future backToRecognizingScreen(BuildContext context) async{
+    await setSelectDefault();
     await emptyImageData();
     await emptyTextInputextAndTranslated();
     Navigator.popAndPushNamed(context, "/recognizing screen");
