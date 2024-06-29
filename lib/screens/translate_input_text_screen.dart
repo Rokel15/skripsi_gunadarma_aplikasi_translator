@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/translate_provider.dart';
-import '../widgets/user_written_translated_screen/input_text.dart';
-import '../widgets/user_written_translated_screen/select_look.dart';
-import '../widgets/user_written_translated_screen/translate_input.dart';
+import '../widgets/translate_input_text_screen/input_text.dart';
+import '../widgets/translate_input_text_screen/select_look.dart';
+import '../widgets/translate_input_text_screen/translate_input.dart';
 
 class TranslateInputTextScreen extends StatelessWidget {
   const TranslateInputTextScreen({super.key});
