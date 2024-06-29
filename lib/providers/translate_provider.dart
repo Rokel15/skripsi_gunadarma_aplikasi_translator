@@ -9,9 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_recognized.dart';
 import '../main.dart';
-import '../widgets/recognizing_screen/text_recognition_painter.dart';
 
 class TranslateProvider extends ChangeNotifier{
   TextStyle roboto14Italic = GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400,);
@@ -142,12 +140,12 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   //TODO RecognizingScreen
-  String _recognizingTextSign = "Recognizing...";
+  final _recognizingTextSign = "Recognizing...";
   CameraController cameraController = CameraController(cameras[0], ResolutionPreset.high);
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   Color cameraCoverColor = const Color(0xff686D76);
   bool _cameraStatus = false;
-  String _frameIcon = "image/frameIcon.png";
+  final _frameIcon = "image/frameIcon.png";
   String openCameraInstruction = "Open Camera!";
   CameraImage? _cameraImage;
   bool isBusy = false;
@@ -155,7 +153,7 @@ class TranslateProvider extends ChangeNotifier{
   String _scanResult = "";
   String _textResult = "";
   String _translateTextResult = "";
-  String _isNotScanningResult = "no text recognized";
+  final _isNotScanningResult = "no text recognized";
 
   bool get cameraStatus => _cameraStatus;
   CameraImage get cameraImage => _cameraImage!;
@@ -332,12 +330,6 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  // emptyTextFromLiveCamera() {
-    // _scanResult = "";
-  //   _scanResult = isNotScanningResult;
-  //   notifyListeners();
-  // }
-
   // Widget textResultFromLiveCamera() {
   //   if (_scanResult == null ||
   //       // cameraController == null ||
@@ -358,7 +350,7 @@ class TranslateProvider extends ChangeNotifier{
   io.File? image;
   ImagePicker imagePicker = ImagePicker();
   String _result = "";
-  String _selecChartLanguage = "select language";
+  final _selectChartLanguage = "select language";
   dynamic onDeviceTranslator;
   final String _headerRecognizedText = "Recognized Text";
   final String _headerTranslatedText = "Translated Text";
@@ -375,7 +367,7 @@ class TranslateProvider extends ChangeNotifier{
   String get headerTranslatedText => _headerTranslatedText;
   String get recognizingTextSign => _recognizingTextSign;
   String get result => _result;
-  String get selectCharLanguage => _selecChartLanguage;
+  String get selectCharLanguage => _selectChartLanguage;
   String get textIsRecognized => _textIsRecognized;
   String get textIsTranslated => _textIsTranslated;
 
@@ -480,12 +472,12 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   //TODO TranslateInputTextScreen
-  String _simpleText = "Translated By ML Kit";
-  String _inputLabel = "input";
-  String _translateLabel = "translate";
+  final _simpleText = "Translated By ML Kit";
+  final _inputLabel = "input";
+  final _translateLabel = "translate";
   TextEditingController inputTextController = TextEditingController();
   String _textTranslateInput = "";
-  Color _inputTextColor = const Color(0xff2E3840);
+  final _inputTextColor = const Color(0xff2E3840);
   String _selectLanguageToTranslate = "select language";
 
   String get simpleText => _simpleText;
