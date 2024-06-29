@@ -65,7 +65,7 @@ class InputAlertDialog extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.grey[600],
                       ),
-                      child: Text(
+                      child: const Text(
                         'Ok',
                       ),
                     ),
