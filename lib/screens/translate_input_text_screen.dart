@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skripsi_aplikasi_translator/widgets/simple_text.dart';
 import '../providers/translate_provider.dart';
 import '../widgets/translate_input_text_screen/input_text.dart';
-import '../widgets/translate_input_text_screen/select_look.dart';
 import '../widgets/translate_input_text_screen/translate_input.dart';
 
 class TranslateInputTextScreen extends StatelessWidget {
@@ -22,12 +22,14 @@ class TranslateInputTextScreen extends StatelessWidget {
             ),
             body: ListView(
               children: [
-                SelectLook(
-                  dropdownButtonValue: translateProvider.selectLook,
-                  dropdownButtonItems: translateProvider.looks,
+                const SizedBox(height: 14,),
+
+                SimpleText(
+                  simpleText: translateProvider.simpleText,
+                  textStyle: translateProvider.roboto16Bold,
                 ),
 
-                const SizedBox(height: 13,),
+                const SizedBox(height: 14,),
 
                 InputText(
                   label: translateProvider.inputLabel,
@@ -37,6 +39,7 @@ class TranslateInputTextScreen extends StatelessWidget {
                   borderColor: Colors.white,
                   selectLanguageValue: translateProvider.selectSourceLanguage,
                   selectLanguageItems: translateProvider.languages,
+                  textStyleSelectLanguage: translateProvider.roboto16Bold,
                   onLanguageChanged: (String val){translateProvider.onSourceLanguageChanged(val);},
                 ),
 
@@ -44,14 +47,16 @@ class TranslateInputTextScreen extends StatelessWidget {
 
                 TranslateInput(
                   label: translateProvider.translateLabel,
-                  textStyleTranslateInput: translateProvider.roboto14Bold,
+                  textStyleLabel: translateProvider.roboto14Bold,
                   translateInputText: translateProvider.textTranslateInput,
+                  textStyleTranslateInputText: translateProvider.roboto16SemiBold,
                   color: translateProvider.inputTextColor,
                   borderColor: Colors.white,
                   selectLanguageValue: translateProvider.selectTargetLanguage,
                   selectLanguageItems: translateProvider.languages,
+                  textStyleSelectLanguage: translateProvider.roboto16Bold,
                   onLanguageChanged: (String val){translateProvider.onTargetLanguageChanged(val);},
-                  tapSementara: () async{await translateProvider.translateInputText();},
+                  tapToTranslate: () async{await translateProvider.translateInputText();},
                 ),
               ],
             ),

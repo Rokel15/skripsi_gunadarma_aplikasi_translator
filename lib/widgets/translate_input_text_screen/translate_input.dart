@@ -1,29 +1,34 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TranslateInput extends StatefulWidget {
   String label;
+  TextStyle textStyleLabel;
   String translateInputText;
-  TextStyle textStyleTranslateInput;
+  TextStyle textStyleTranslateInputText;
   Color color;
   Color borderColor;
   String selectLanguageValue;
   List<String> selectLanguageItems;
+  TextStyle textStyleSelectLanguage;
   Function(String) onLanguageChanged;
-
-  Function() tapSementara;
+  Function() tapToTranslate;
 
   TranslateInput({
     super.key,
     required this.label,
+    required this.textStyleLabel,
     required this.translateInputText,
-    required this.textStyleTranslateInput,
+    required this.textStyleTranslateInputText,
     required this.color,
     required this.borderColor,
     required this.selectLanguageValue,
     required this.selectLanguageItems,
+    required this.textStyleSelectLanguage,
     required this.onLanguageChanged,
-    required this.tapSementara
+    required this.tapToTranslate
   });
 
   @override
@@ -53,7 +58,7 @@ class _TranslateInputState extends State<TranslateInput> {
                   return DropdownMenuItem(
                     value: val,
                     child: Row(
-                      children: [const Icon(Icons.language), Text(val)],
+                      children: [const Icon(Icons.language), Text(val, style: widget.textStyleSelectLanguage,)],
                     ),
                   );
                 }).toList(),
@@ -63,21 +68,21 @@ class _TranslateInputState extends State<TranslateInput> {
               GestureDetector(
                 child: Text(
                   widget.label,
-                  style: widget.textStyleTranslateInput,
+                  style: widget.textStyleLabel,
                 ),
                 onTap: (){
-                  widget.tapSementara();
+                  widget.tapToTranslate();
                 },
               )
             ],
           ),
 
           Expanded(
-              child: ListView(
-                  children: [
-                    Text(widget.translateInputText),
-                  ]
-              )
+            child: ListView(
+              children: [
+                Text(widget.translateInputText, style: widget.textStyleTranslateInputText,),
+              ],
+            ),
           ),
         ],
       ),

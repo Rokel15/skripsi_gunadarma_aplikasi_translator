@@ -8,6 +8,7 @@ class InputText extends StatefulWidget {
   Color borderColor;
   String selectLanguageValue;
   List<String> selectLanguageItems;
+  TextStyle textStyleSelectLanguage;
   Function(String) onLanguageChanged;
 
   InputText({
@@ -18,6 +19,7 @@ class InputText extends StatefulWidget {
     required this.borderColor,
     required this.selectLanguageValue,
     required this.selectLanguageItems,
+    required this.textStyleSelectLanguage,
     required this.onLanguageChanged,
     super.key,
   });
@@ -49,7 +51,7 @@ class _InputTextState extends State<InputText> {
                   return DropdownMenuItem(
                     value: val,
                     child: Row(
-                      children: [const Icon(Icons.language), Text(val)],
+                      children: [const Icon(Icons.language), Text(val, style: widget.textStyleSelectLanguage,)],
                     ),
                   );
                 }).toList(),

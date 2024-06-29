@@ -133,19 +133,6 @@ class TranslateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  List<String> _looks = ["look 1", "look 2"];
-  List<String> get looks => [..._looks];
-
-  String _selectLook = "look 1";
-  String get selectLook{
-    return _selectLook;
-  }
-
-  void onLookChange(String look){
-    _selectLook = look;
-    notifyListeners();
-  }
-
   Future backToRecognizingScreen(BuildContext context) async{
     await setSelectDefault();
     await emptyImageData();
@@ -488,25 +475,25 @@ class TranslateProvider extends ChangeNotifier{
   }
 
   //TODO TranslateInputTextScreen
+  String _simpleText = "Translated By ML Kit";
   String _inputLabel = "input";
   String _translateLabel = "translate";
   TextEditingController inputTextController = TextEditingController();
   String _textTranslateInput = "";
   Color _inputTextColor = const Color(0xff2E3840);
+  String _selectLanguageToTranslate = "select language";
 
+  String get simpleText => _simpleText;
   String get inputLabel => _inputLabel;
   String get translateLabel => _translateLabel;
-  String get textTranslateInput =>_textTranslateInput;
+  String get textTranslateInput => _textTranslateInput;
   Color get inputTextColor => _inputTextColor;
 
   Future translateInputText()async{
     if(sourceLanguage != null && targetLanguage != null){
-    // if(isEnglishDownloaded && isIndonesianDownloaded){
       final String response = await OnDeviceTranslator(
         sourceLanguage: sourceLanguage!,
-        // sourceLanguage: TranslateLanguage.indonesian,
         targetLanguage: targetLanguage!,
-        // targetLanguage: TranslateLanguage.english!,
       ).translateText(inputTextController.text);
       _textTranslateInput = response;
       notifyListeners();

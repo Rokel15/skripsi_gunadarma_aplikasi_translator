@@ -41,7 +41,7 @@ class SkripsiAplikasiTranslator extends StatelessWidget {
         initialRoute: "/recognizing screen",
         routes: {
           "/recognizing screen" : (BuildContext context) => const RecognizingScreen(),
-          "/image translated screen" : (BuildContext context) =>  CameraAndGalleryTranslatedScreen(),
+          "/image translated screen" : (BuildContext context) =>  const CameraAndGalleryTranslatedScreen(),
           "/translate input text screen" : (BuildContext context) => const TranslateInputTextScreen(),
         },
       ),
