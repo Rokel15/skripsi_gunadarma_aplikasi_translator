@@ -83,19 +83,11 @@ class TranslateProvider extends ChangeNotifier{
     return [..._languages.keys.toList()];
   }
 
-  // String _selectSourceLanguageForLiveCamera = "select language";
-  // TranslateLanguage? _sourceLanguageForLiveCamera;
-  // String _selectTargetLanguageForLiveCamera = "select language";
-  // TranslateLanguage? _targetLanguageForLiveCamera;
   String _selectSourceLanguage = "select language";
   TranslateLanguage? _sourceLanguage;
   String _selectTargetLanguage = "select language";
   TranslateLanguage? _targetLanguage;
 
-  // String get selectSourceLanguageForLiveCamera => _selectSourceLanguageForLiveCamera;
-  // TranslateLanguage? get sourceLanguageForLiveCamera => _sourceLanguageForLiveCamera;
-  // String get selectTargetLanguageForLiveCamera => _selectTargetLanguageForLiveCamera;
-  // TranslateLanguage? get targetLanguageForLiveCamera => _targetLanguageForLiveCamera;
   String get selectSourceLanguage => _selectSourceLanguage;
   TranslateLanguage? get sourceLanguage => _sourceLanguage;
   String get selectTargetLanguage => _selectTargetLanguage;
@@ -448,6 +440,7 @@ class TranslateProvider extends ChangeNotifier{
   //TODO CameraAndGalleryTranslatedScreen
   Color textFromImageColor = const Color(0xff4C4C6D);
   bool _translatedIsBelow = true;
+  Icon get noImageIcon => Icon(Icons.find_in_page);
   Icon get arrowDownwardIcon => const Icon(Icons.arrow_downward);
   Icon get arrowUpwardIcon => const Icon(Icons.arrow_upward);
   bool get translatedIsBelow => _translatedIsBelow;

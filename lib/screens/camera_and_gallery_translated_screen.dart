@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skripsi_aplikasi_translator/providers/translate_provider.dart';
+import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/show_image.dart';
 import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_recognized.dart';
 import 'package:skripsi_aplikasi_translator/widgets/camera_and_gallery_translated_screen/text_is_translated.dart';
 
@@ -38,19 +39,9 @@ class _CameraAndGalleryTranslatedScreenState extends State<CameraAndGalleryTrans
 
                 const SizedBox(height: 14,),
 
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height*4.8/10,
-                  margin: const EdgeInsets.symmetric(horizontal: 46),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: translateProvider.image!=null?
-                    Image.file(
-                      translateProvider.image!,
-                      fit: BoxFit.fill,
-                    ) :
-                    const Icon(Icons.find_in_page),
-                  ),
+                ShowImage(
+                  image: translateProvider.image,
+                  noImageIcon: translateProvider.noImageIcon,
                 ),
 
                 const SizedBox(height: 36,),
