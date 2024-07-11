@@ -133,7 +133,7 @@ class TranslateProvider extends ChangeNotifier{
 
   //TODO RecognizingScreen
   final _recognizingTextSign = "Recognizing...";
-  CameraController cameraController = CameraController(cameras[0], ResolutionPreset.high);
+  CameraController cameraController = CameraController(cameras[0], ResolutionPreset.high, imageFormatGroup: ImageFormatGroup.yuv420);
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   Color cameraCoverColor = const Color(0xff686D76);
   bool _cameraStatus = false;
@@ -174,14 +174,15 @@ class TranslateProvider extends ChangeNotifier{
       // await cameraController.stopVideoRecording();
 
       cameraController.dispose();
-      _scanResult = isNotScanningResult;
+      // _scanResult = isNotScanningResult;
+      // _scanResult = "";
       notifyListeners();
     }
     notifyListeners();
   }
 
   Future initializeCamera() async {
-    cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    cameraController = CameraController(cameras[0], ResolutionPreset.high, imageFormatGroup: ImageFormatGroup.yuv420);
     try {
       await cameraController.initialize();
       cameraController.startImageStream((image) {
@@ -245,6 +246,67 @@ class TranslateProvider extends ChangeNotifier{
     // notifyListeners();
   }
 
+  doTextRecognitionOnLiveCamera() async {
+    var frameImage = getInputImageFromLiveCamera();
+    RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
+    _scanResult = "";
+
+    for (TextBlock block in recognizedText.blocks){
+      final Rect rect = block.boundingBox;
+      final List cornerPoints = block.cornerPoints;
+      final String text = block.text;
+      final List<String> languages = block.recognizedLanguages;
+      for (TextLine line in block.lines) {
+        // Same getters as TextBlock
+        for (TextElement element in line.elements) {
+          _scanResult += element.text+" ";
+          // Same getters as TextBlock
+          notifyListeners();
+        }
+        _scanResult += "\n";
+        notifyListeners();
+      }
+      _scanResult += "\n";
+      notifyListeners();
+    }
+
+    isBusy = false;
+    translateTextFromLiveCamera(_scanResult);
+    notifyListeners();
+  }
+
+  // void doTextRecognitionOnLiveCamera() async {
+  //   try {
+  //     var frameImage = getInputImageFromLiveCamera();
+  //     RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
+  //     _scanResult = "";
+  //
+  //     for (TextBlock block in recognizedText.blocks) {
+  //       final Rect rect = block.boundingBox;
+  //       final List cornerPoints = block.cornerPoints;
+  //       final String text = block.text;
+  //       final List<String> languages = block.recognizedLanguages;
+  //       for (TextLine line in block.lines) {
+  //         // Same getters as TextBlock
+  //         for (TextElement element in line.elements) {
+  //           _scanResult += element.text + " ";
+  //           // Same getters as TextBlock
+  //           notifyListeners();
+  //         }
+  //         _scanResult += "\n";
+  //         notifyListeners();
+  //       }
+  //       _scanResult += "\n";
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     print("Error in text recognition: $e");
+  //   }
+  //
+  //   isBusy = false;
+  //   notifyListeners();
+  // }
+
   getInputImageFromLiveCamera(){
     final WriteBuffer allBytes = WriteBuffer();
     for (final Plane plane in cameraImage.planes){
@@ -273,41 +335,11 @@ class TranslateProvider extends ChangeNotifier{
     );
 
     final inputImage = InputImage.fromBytes(
-      bytes: bytes, metadata: metadata
+        bytes: bytes, metadata: metadata
     );
 
     notifyListeners();
     return inputImage;
-  }
-
-  doTextRecognitionOnLiveCamera() async {
-    var frameImage = getInputImageFromLiveCamera();
-    RecognizedText recognizedText = await textRecognizer.processImage(frameImage);
-    _scanResult = "";
-
-    for (TextBlock block in recognizedText.blocks){
-      final Rect rect = block.boundingBox;
-      final List cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          _scanResult += element.text+" ";
-          // Same getters as TextBlock
-          notifyListeners();
-        }
-        _scanResult += "\n";
-        notifyListeners();
-      }
-      _scanResult += "\n";
-      notifyListeners();
-    }
-
-    isBusy = false;
-    translateTextFromLiveCamera(_scanResult);
-    notifyListeners();
   }
 
   translateTextFromLiveCamera(String text)async{
